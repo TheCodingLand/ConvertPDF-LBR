@@ -169,7 +169,7 @@ def lookForFiles(folder):
         for option in options:
             i=i+1
             convertImage(pdf,option) #border to converted
-            buildPdf(pdf,option)
+            buildPdf(pdf,option,i)
             
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "completed"})
         time.sleep(1)
