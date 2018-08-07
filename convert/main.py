@@ -72,6 +72,8 @@ def extractPages(pdf):
     if not os.path.exists(f"{pdf.tempdir!s}images/"):
         os.makedirs(f"{pdf.tempdir!s}images/")
     for i in range(0, 2000):
+        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "extracting pages", "progress" : i })
+        pub.publish(pdf.redisKey, pdf.redisKey)
         command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}"[{i!s}] {pdf.tempdir!s}images/image_{i:04}.jpg'
         logging.warning(command)
         returncode = call(command, shell=True)
@@ -98,7 +100,7 @@ def addBorderA4(pdf):
         os.makedirs(f"{pdf.tempdir!s}border/")
     for i in range(0,pdf.totalpages):
         command = f"convert {pdf.tempdir!s}shrink/image_{i:04}.jpg -gravity center -extent 1653x2339 {pdf.tempdir!s}border/image_{i:04}.jpg"
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : i" })
+        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
         logging.warning(command)
         call(command, shell=True)
