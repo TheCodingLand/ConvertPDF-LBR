@@ -18,7 +18,7 @@ services:
   #     - "traefik.frontend.rule=Host:docker.lbr.lu"
   #     - "traefik.frontend.entryPoints=http-admin"
   #   networks:
-  #     - web
+  #     - ai-web
   #   volumes:
   #     - /var/run/docker.sock:/var/run/docker.sock
   #     - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml
@@ -32,7 +32,7 @@ services:
     expose:
       - "6379"
     networks:
-      - web
+      - ai-web
   
     volumes:
     - ./redis:/data
@@ -50,7 +50,7 @@ services:
      - PDFPATHORIGIN=${PDFPATHORIGIN}
      - REDIS_HOST=${REDIS_HOST}
     networks:
-      - web
+      - ai-web
 
   websocket:
     build: ./websocket/
@@ -67,7 +67,7 @@ services:
       - "3001"
     
     networks:
-      - web
+      - ai-web
     working_dir : /usr/src/app
     command: sh -c 'node ./src/server.js'
 
@@ -87,7 +87,7 @@ services:
     volumes:
       - pdfdata:/data
     networks:
-      - web
+      - ai-web
     working_dir : /data/converted
     command: sh -c 'python -m http.server 8000'
 
@@ -107,7 +107,7 @@ services:
     volumes:
       - pdfdata:/data
     networks:
-      - web
+      - ai-web
     working_dir : /usr/src/app
     command: sh -c 'node ./src/index.js'
 
@@ -123,13 +123,13 @@ services:
     expose:
       - "8080"
     networks:
-      - web
+      - ai-web
       
    
 
 
 networks:
-  web:
+  ai-web:
     external: true
 
 volumes:
