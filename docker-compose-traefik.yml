@@ -22,7 +22,7 @@ services:
       - ai-web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/traefik/traefik.toml:/etc/traefik/traefik-https.toml
+      - /opt/traefik/traefik.toml:/etc/traefik/traefik-http.toml
       - /opt/traefik/acme.json:/etc/traefik/acme.json
 
 
