@@ -40,7 +40,7 @@ class Option(object):
         self.name = name
 
 
-monitoringDir = "/media/docs/"
+monitoringDir = os.environ.get('PDFPATHORIGIN')
 workingdir= os.getcwd()
 
 options = []
