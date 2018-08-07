@@ -24,7 +24,7 @@ function FolderList(props) {
       <List>
       {props.links.map(link => {
         return <ListItem key={link}>
-          <Avatar>
+          <Avatar onClick={()=> window.open('http://converted.'+ props.host+'/'+link, "_blank")}>
             <AttachmentIcon />
           </Avatar>
           <ListItemText onClick={()=> window.open('http://converted.'+ props.host+'/'+link, "_blank")} button primary={props.name} secondary={link} />
