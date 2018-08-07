@@ -80,7 +80,7 @@ class Upload extends Component {
 
             }
         
-        this.setState( { filestate: o } )
+        this.setState( { ...o } )
        
        
         if (this.state.status ==="completed") {
@@ -112,6 +112,7 @@ class Upload extends Component {
                 <div className="dropzone" > 
                   <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig}></DropzoneComponent>    
                 </div>:<CircularProgress />}
+                
                 <aside>
                 <Typography> 
                        {this.state.name ? "Converting :"+this.state.name : ""}                   
