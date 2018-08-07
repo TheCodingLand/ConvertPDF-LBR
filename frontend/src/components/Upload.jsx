@@ -16,7 +16,7 @@ const styles = theme => ({
 
 class Upload extends Component {
    
-    constructor(props) {
+    constructor(props) { 
         super(props)
         this.state = {
             selectpages : false,

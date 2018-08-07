@@ -22,7 +22,7 @@ class App extends Component {
         return hostpath.join('.')
      
       }
-      this.setState({host:host})
+      
     }
 
     let SOCKET_URL = `uploadws.${this.gethost()}`
@@ -30,7 +30,7 @@ class App extends Component {
     this.state = {
       socket: socket,
       connected:false,
-      host:''
+      host:this.gethost()
     }
   
     this.state.socket.on('connect', this.setConnected)  
