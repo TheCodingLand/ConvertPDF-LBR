@@ -214,7 +214,7 @@ def lookForFiles(folder):
             logging.info("could not delete temp dir, will be cleaned up with cronjob")
     
 while True:
-    time.sleep(10)
+    time.sleep(1)
     try:
         lookForFiles(monitoringDir)
     except:
