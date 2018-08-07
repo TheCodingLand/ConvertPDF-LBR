@@ -58,7 +58,7 @@ services:
      - REDIS_HOST=${REDIS_HOST}
     labels:
         - "traefik.backend=uploadws"
-        - "traefik.docker.network=web"
+        - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
         - "traefik.port=3001"
         - "traefik.frontend.rule=Host:uploadws.${D_HOST}"
@@ -77,7 +77,7 @@ services:
     image: python:latest
     labels:
         - "traefik.backend=converted"
-        - "traefik.docker.network=web"
+        - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
         - "traefik.port=8000"
         - "traefik.frontend.rule=Host:converted.${D_HOST}"
@@ -97,7 +97,7 @@ services:
     build: ./upload/
     labels:
         - "traefik.backend=uploadpdf"
-        - "traefik.docker.network=web"
+        - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
         - "traefik.port=8080"
         - "traefik.frontend.rule=Host:uploadpdf.${D_HOST}"
@@ -115,7 +115,7 @@ services:
     build: ./frontend/
     labels:
         - "traefik.backend=convertpdf"
-        - "traefik.docker.network=web"
+        - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
         - "traefik.port=8080"
         - "traefik.frontend.rule=Host:convertpdf.{D_HOST}"
