@@ -40,7 +40,7 @@ services:
     build: ./convert
     volumes:
      - './convert:/usr/src/app'
-     - /data:/data
+     - pdfdata:/data
     environment:
      - PDFPATHORIGIN=${PDFPATHORIGIN}
     networks:
@@ -77,7 +77,7 @@ services:
     expose:
       - "8000"
     volumes:
-      - /data:/data
+      - pdfdata:/data
     networks:
       - web
     working_dir : /data/converted
@@ -97,7 +97,7 @@ services:
     expose:
       - "8080"
     volumes:
-      - /data:/data
+      - pdfdata:/data
     networks:
       - web
     working_dir : /usr/src/app
@@ -125,11 +125,9 @@ networks:
     external: true
 
 volumes:
-  pdferrordb : {}
-  aidata: {}
-  portainerdata: {}
-  mongodb: {}
-  postgres-data: {}
-  xwiki-data: {}
+ 
+  pdfdata: {}
+  
+  
  
   

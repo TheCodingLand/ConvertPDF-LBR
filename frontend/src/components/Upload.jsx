@@ -10,8 +10,8 @@ import FolderList from './folderList';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import purple from '@material-ui/core/colors/purple';
 import Grid from '@material-ui/core/Grid'
-import { LinearProgress, Typography } from '@material-ui/core';
-
+import Typography from '@material-ui/core/Typography';
+import LinearProgress from './LinearProgress'
 const styles = theme => ({
     root: {
       flexGrow: 1,
@@ -144,11 +144,15 @@ getOutputFile(){
                   <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig}></DropzoneComponent>    
                 </div>:<CircularProgress />}
                 <aside>
-                    
+                <Typography> 
+                       {this.state.filestate.name ? "Converting :"+this.state.filestate.name : ""}                   
+                      </Typography>
                 
                       <Typography>       
-                      {this.state.filestate.progress ? this.state.filestate.progress : ""}                   
+                      {this.state.filestate.progress ? this.state.filestate.progress+'/'+this.state.filestate.pages : ""}                   
+                      <LinearProgress value={parseInt(this.state.filestate.progress, 10)} max={parseInt(this.state.filestate.pages,10)} />
                      </Typography>
+                     
                       <Typography> 
                       {this.state.filestate.status ? this.state.filestate.status : ""}                   
                       </Typography>
