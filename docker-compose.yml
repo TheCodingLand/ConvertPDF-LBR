@@ -35,7 +35,7 @@ services:
       - ai-web
   
     volumes:
-    - ./redis:/data
+    - redispdf:/data
 
 
   convert:
@@ -44,7 +44,6 @@ services:
     
     
     volumes:
-     - './convert:/usr/src/app'
      - pdfdata:/data
     environment:
      - PDFPATHORIGIN=${PDFPATHORIGIN}
@@ -137,8 +136,10 @@ networks:
     external: true
 
 volumes:
- 
+  
   pdfdata: {}
+  
+  redispdf: {}
   
   
  
