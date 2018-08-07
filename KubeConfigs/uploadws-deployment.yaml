@@ -4,12 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f ../docker-compose.yml
     kompose.version: 1.16.0 (0c01309)
-    traefik.backend: uploadws
-    traefik.docker.network: ai-web
-    traefik.enable: "true"
-    traefik.frontend.entryPoints: http
-    traefik.frontend.rule: Host:uploadws.
-    traefik.port: "3001"
   creationTimestamp: null
   labels:
     io.kompose.service: uploadws
