@@ -83,7 +83,7 @@ def convertImage(pdf, option):
     if not os.path.exists(f"{pdf.tempdir!s}converted/"):
         os.makedirs(f"{pdf.tempdir!s}converted/")
     for i in range(0,pdf.totalpages):
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "applying filter", "pages": pdf.totalpages, "progress" : f"{i!s}/{pdf.totalpages!s}" })
+        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "applying filter", "pages": pdf.totalpages, "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
         command = f"{option.algo!s} -b {option.bias!s} -r {option.radius!s} -m {option.method!s} -n yes {pdf.tempdir!s}border/image_{i:04}.jpg {pdf.tempdir!s}converted/image_{i:04}.gif"
         logging.warning(command)
@@ -98,7 +98,7 @@ def addBorderA4(pdf):
         os.makedirs(f"{pdf.tempdir!s}border/")
     for i in range(0,pdf.totalpages):
         command = f"convert {pdf.tempdir!s}shrink/image_{i:04}.jpg -gravity center -extent 1653x2339 {pdf.tempdir!s}border/image_{i:04}.jpg"
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : f"{i!s}/{pdf.totalpages!s}" })
+        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : i" })
         pub.publish(pdf.redisKey, pdf.redisKey)
         logging.warning(command)
         call(command, shell=True)
@@ -108,12 +108,12 @@ def shrinkOnlyLarger(pdf):
         os.makedirs(f"{pdf.tempdir!s}shrink/")
     for i in range(0,pdf.totalpages):
         command = f"convert {pdf.tempdir!s}images/image_{i:04}.jpg -resize 1653x2339\\> {pdf.tempdir!s}shrink/image_{i:04}.jpg"
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Shrink to A4", "pages": pdf.totalpages, "progress" : f"{i!s}/{pdf.totalpages!s}" })
+        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Shrink to A4", "pages": pdf.totalpages, "progress" : i })
         
         logging.warning(command)
         call(command, shell=True)
 
-def buildPdf(pdf,option):
+def buildPdf(pdf,option,i):
     outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
     command = f'pdftk {pdf.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
     #command = f'pdfunite {pdf.tempdir!s}converted/image_*.pdf "{outputPdfPath}"'
@@ -121,7 +121,7 @@ def buildPdf(pdf,option):
     #r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished", "output": outputPdfPath })
     call(command, shell=True)
     pdf.links.append(f"{option.name}_{pdf.name!s}")
-    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : "100%" })
+    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "file" : i, "progress" : pdf.totalpages })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
 
@@ -132,7 +132,7 @@ def imageToPdf(pdf,option):
     call(command, shell=True)
     #outputpath = f"{pdf.path!s}converted/{pdfname!s}"
     pdf.links.append(pdfname)
-    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : "100%" })
+    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : 1 })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
 
