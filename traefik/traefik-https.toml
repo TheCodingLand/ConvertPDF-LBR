@@ -1,0 +1,60 @@
+
+
+debug = false
+logLevel = "ERROR"
+
+
+[docker]
+  endpoint = "unix:///var/run/docker.sock"
+  domain = "julien.tech"
+  watch = true
+  exposedbydefault = false
+defaultEntryPoints = [ "https" ]
+
+[entryPoints]
+ [entryPoints.http]
+  address = ":80"
+  [entryPoints.http.redirect]
+   entrypoint = "https"
+ [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+
+
+
+
+
+
+[entryPoints.ping]
+  address = ":8082"
+
+[entryPoints.admin]
+  address = ":8081"
+
+[rest]
+ entryPoint = "ping"
+
+[ping]
+  entryPoint = "ping"
+
+[api]
+  entryPoint = "admin"
+  dashboard = true
+  [web.statistics]
+
+
+  [file]
+    [backends]
+     [backends.backend1]
+       [backends.backend1.servers.server1]
+        url = "http://127.0.0.1:8081"
+
+[acme]
+ email = "aureussz@gmail.com"
+ storage = "/etc/traefik/acme.json"
+ entryPoint = "https"
+ onHostRule = true
+
+    
+ [acme.httpChallenge]
+ entryPoint = "http"
