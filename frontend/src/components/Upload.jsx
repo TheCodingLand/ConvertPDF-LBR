@@ -36,7 +36,7 @@ class Upload extends Component {
         this.componentConfig = {
             iconFiletypes: ['.jpg', '.pdf'],
             showFiletypeIcon: true,
-            postUrl: 'http://uploadpdf.lbr.lu/uploadHandler'
+            postUrl: 'http://uploadpdf.'+this.props.host+'/uploadHandler'
         }
 
         // If you want to attach multiple callbacks, simply
