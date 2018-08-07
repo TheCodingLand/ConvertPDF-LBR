@@ -49,6 +49,8 @@ services:
     environment:
      - PDFPATHORIGIN=${PDFPATHORIGIN}
      - REDIS_HOST=${REDIS_HOST}
+    depends_on: 
+      - redis-pdf
     networks:
       - ai-web
 
@@ -68,6 +70,8 @@ services:
     
     networks:
       - ai-web
+    depends_on: 
+      - redis-pdf
     working_dir : /usr/src/app
     command: sh -c 'node ./src/server.js'
 
