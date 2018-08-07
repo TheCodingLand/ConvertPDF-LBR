@@ -3,7 +3,7 @@ import glob, os, random, shutil, time, re, fnmatch, sys
 from subprocess import call
 import logging
 import redis
-import sys, chardet
+import sys
 logging.error(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
