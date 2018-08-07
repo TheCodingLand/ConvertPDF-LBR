@@ -5,8 +5,9 @@ import logging
 import redis
 import sys, chardet
 logging.error(sys.getdefaultencoding())
-r = redis.StrictRedis(host='redis', port=6379, db=5)
-pub = redis.StrictRedis(host='redis', port=6379)
+redis-host =os.environ.get('REDIS_HOST')
+r = redis.StrictRedis(host=redis-host, port=6379, db=5)
+pub = redis.StrictRedis(host=redis-host, port=6379)
 #TODO Module : Refactor into a class, split classes into files, add path management for files in the class for intermediate image conversions (location of the latest conversion -> destination)
 #TODO ReactJS web frontend : uploads, previews, websocket, downloads, notifications.
 #TODO SERVER : API, worker queue.

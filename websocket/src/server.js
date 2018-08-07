@@ -1,12 +1,14 @@
 
 var redis = require('redis');
 var io = require('socket.io')(3001);
-const redis_host = "redis"
+const redis_host= process.env.REDIS_HOST
+
 var host = "redis://" + redis_host + ":6379";
 var redisclient = redis.createClient(host);
 redisclient.select(5);
 var redis_sub = redis.createClient(host)
 console.log("v0.03")
+
 
 redis_sub.psubscribe('conversion.*')
 

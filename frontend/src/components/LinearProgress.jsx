@@ -1,9 +1,7 @@
 // MIN = Minimum expected value
 // MAX = Maximium expected value
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import React from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress'
 
 // Function to normalise the values (MIN / MAX could be integrated)
 const normalise = (value,max) => (value) * 100 / (max)

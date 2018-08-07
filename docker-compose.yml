@@ -41,16 +41,21 @@ services:
   convert:
     restart: always
     build: ./convert
+    
+    
     volumes:
      - './convert:/usr/src/app'
      - pdfdata:/data
     environment:
      - PDFPATHORIGIN=${PDFPATHORIGIN}
+     - REDIS_HOST=${REDIS_HOST}
     networks:
       - web
 
   websocket:
     build: ./websocket/
+    environment:
+     - REDIS_HOST=${REDIS_HOST}
     labels:
         - "traefik.backend=uploadws"
         - "traefik.docker.network=web"
