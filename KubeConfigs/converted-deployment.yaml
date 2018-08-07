@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.16.0 (0c01309)
+    traefik.backend: converted
+    traefik.docker.network: ai-web
+    traefik.enable: "true"
+    traefik.frontend.entryPoints: http
+    traefik.frontend.rule: Host:converted.
+    traefik.port: "8000"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: converted
+  name: converted
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: converted
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - python -m http.server 8000
+        env:
+        - name: DESTINATION
+          value: /data
+        image: python:latest
+        name: converted
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: pdfdata
+        workingDir: /data/converted
+      restartPolicy: Always
+      volumes:
+      - name: pdfdata
+        persistentVolumeClaim:
+          claimName: pdfdata
+status: {}

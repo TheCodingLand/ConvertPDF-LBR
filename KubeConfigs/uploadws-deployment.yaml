@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.16.0 (0c01309)
+    traefik.backend: uploadws
+    traefik.docker.network: ai-web
+    traefik.enable: "true"
+    traefik.frontend.entryPoints: http
+    traefik.frontend.rule: Host:uploadws.
+    traefik.port: "3001"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: uploadws
+  name: uploadws
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: uploadws
+    spec:
+      containers:
+      - args:
+        - sh
+        - -c
+        - node ./src/server.js
+        env:
+        - name: REDIS_HOST
+        image: uploadws
+        name: uploadws
+        resources: {}
+        workingDir: /usr/src/app
+      restartPolicy: Always
+status: {}

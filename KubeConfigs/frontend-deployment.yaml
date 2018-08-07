@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.16.0 (0c01309)
+    traefik.backend: frontend
+    traefik.docker.network: ai-web
+    traefik.enable: "true"
+    traefik.frontend.entryPoints: http
+    traefik.frontend.rule: Host:convertpdf.
+    traefik.port: "8080"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+      - image: frontend
+        name: frontend
+        resources: {}
+      restartPolicy: Always
+status: {}
