@@ -52,7 +52,7 @@ services:
     networks:
       - ai-web
 
-  websocket:
+  uploadws:
     build: ./websocket/
     environment:
      - REDIS_HOST=${REDIS_HOST}
@@ -91,7 +91,7 @@ services:
     working_dir : /data/converted
     command: sh -c 'python -m http.server 8000'
 
-  upload:
+  uploadpdf:
     environment:
       - DESTINATION=/data
     build: ./upload/
@@ -114,7 +114,7 @@ services:
   frontend:
     build: ./frontend/
     labels:
-        - "traefik.backend=convertpdf"
+        - "traefik.backend=frontend"
         - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
         - "traefik.port=8080"
