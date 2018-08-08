@@ -25,7 +25,7 @@ spec:
         name: convert
         resources: {}
         volumeMounts:
-        - mountPath: "/apps/data"
+        - mountPath: "/data"
           name: pdfdata
       volumes:
       - name: pdfdata
