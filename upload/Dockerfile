@@ -14,5 +14,7 @@ ADD package-lock.json /usr/src/app/package-lock.json
 RUN npm install
 RUN npm install express
 COPY . /usr/src/app/
+
 RUN mkdir /data
+RUN chmod 777 /data 
 CMD node ./src/index.js
