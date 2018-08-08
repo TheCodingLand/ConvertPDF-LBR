@@ -24,7 +24,7 @@ spec:
         name: uploadpdf
         resources: {}
         volumeMounts:
-        - mountPath: "/apps/data"
+        - mountPath: "/data"
           name: pdfdata
       volumes:
       - name: pdfdata
