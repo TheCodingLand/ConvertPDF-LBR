@@ -56,5 +56,5 @@ ADD requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 ADD . /usr/src/app
-
-CMD mount -t nfs singlefs-1-vm:/data /datapython3 main.py
+RUN mkdir /data
+CMD mount -t nfs singlefs-1-vm:/data /data python3 main.py
