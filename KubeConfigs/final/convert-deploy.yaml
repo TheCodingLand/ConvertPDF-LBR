@@ -24,7 +24,14 @@ spec:
         image: gcr.io/api-project-213114800966/convert
         name: convert
         resources: {}
-        
+      volumeMounts:
+        - mountPath: "/apps/data"
+          name: pdfdata
+      volumes:
+      - name: pdfdata
+        nfs:
+          path: "/data"
+          server: 10.132.0.10
       restartPolicy: Always
 
       

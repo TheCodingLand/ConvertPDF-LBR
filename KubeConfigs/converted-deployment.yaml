@@ -20,7 +20,6 @@ spec:
         - sh
         - -c
         - mkdir /data &&
-        - mount -t nfs singlefs-1-vm:/data /data &&
         - mkdir /data/converted &&
         - python -m http.server 8000
         env:
@@ -29,8 +28,15 @@ spec:
         image: python:latest
         name: converted
         resources: {}
-        
         workingDir: /data/converted
+      volumeMounts:
+        - mountPath: "/apps/data"
+          name: pdfdata
+      volumes:
+      - name: pdfdata
+        nfs:
+          path: "/data"
+          server: 10.132.0.10
       restartPolicy: Always
     
  
