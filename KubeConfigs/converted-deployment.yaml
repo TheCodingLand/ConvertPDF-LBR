@@ -32,11 +32,11 @@ spec:
         volumeMounts:
         - mountPath: "/data"
           name: pdfdata
-        volumes:
-        - name: pdfdata
-          nfs:
-           path: "/data"
-           server: 10.132.0.10
+      volumes:
+       - name: pdfdata
+         nfs:
+          path: "/data"
+          server: 10.132.0.10
       restartPolicy: Always
     
  
