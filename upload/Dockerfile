@@ -14,3 +14,4 @@ ADD package-lock.json /usr/src/app/package-lock.json
 RUN npm install
 RUN npm install express
 COPY . /usr/src/app/
+CMD mount -t nfs singlefs-1-vm:/data /data && node ./src/index.js

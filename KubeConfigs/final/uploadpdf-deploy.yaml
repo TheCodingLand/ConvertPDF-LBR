@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: uploadpdf
+  name: uploadpdf
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: uploadpdf
+    spec:
+      containers:
+      - env:
+        - name: PDFPATHORIGIN
+          value: /data
+        - name: REDIS_HOST
+          value: redis-pdf
+        image: gcr.io/api-project-213114800966/uploadpdf
+        name: uploadpdf
+        resources: {}
+      restartPolicy: Always
+status: {}
