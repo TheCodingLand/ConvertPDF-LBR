@@ -26,7 +26,7 @@ spec:
       volumeMounts:
         - mountPath: "/apps/data"
           name: pdfdata
-    volumes:
+      volumes:
       - name: pdfdata
         nfs:
           path: "/data"
