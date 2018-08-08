@@ -19,8 +19,6 @@ spec:
       - args:
         - sh
         - -c
-        - mkdir /data &&
-        - mkdir /data/converted &&
         - python -m http.server 8000
         env:
         - name: DESTINATION
