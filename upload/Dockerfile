@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
 
 RUN apt-get update
 RUN apt-get install -yq curl git nano
@@ -14,5 +14,5 @@ ADD package-lock.json /usr/src/app/package-lock.json
 RUN npm install
 RUN npm install express
 COPY . /usr/src/app/
-
+RUN mkdir /data
 CMD node ./src/index.js

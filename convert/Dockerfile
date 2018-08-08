@@ -1,7 +1,6 @@
 FROM ubuntu:bionic
 
 
-
 RUN apt-get update && apt-get install -y \ 
     build-essential \
     python3 \
@@ -42,12 +41,7 @@ COPY policy.xml /etc/ImageMagick-6/policy.xml
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-
-
-
 # add app
-
-
 
 RUN wget "http://www.fmwconcepts.com/imagemagick/downloadcounter.php?scriptname=localthresh&dirname=localthresh" -O /usr/bin/localthresh
 RUN chmod 777 /usr/bin/localthresh 
