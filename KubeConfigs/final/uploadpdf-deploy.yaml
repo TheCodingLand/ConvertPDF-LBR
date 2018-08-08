@@ -23,7 +23,7 @@ spec:
         image: gcr.io/api-project-213114800966/uploadpdf
         name: uploadpdf
         resources: {}
-      volumeMounts:
+        volumeMounts:
         - mountPath: "/apps/data"
           name: pdfdata
       volumes:
