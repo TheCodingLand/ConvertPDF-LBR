@@ -24,7 +24,7 @@ spec:
         image: gcr.io/api-project-213114800966/convert
         name: convert
         resources: {}
-      volumeMounts:
+        volumeMounts:
         - mountPath: "/apps/data"
           name: pdfdata
       volumes:
