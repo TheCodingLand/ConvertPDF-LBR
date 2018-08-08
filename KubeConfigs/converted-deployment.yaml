@@ -1,12 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.version: 1.16.0 (0c01309)
   creationTimestamp: null
   labels:
-    io.kompose.service: converted
+    app: converted
   name: converted
 spec:
   replicas: 1
@@ -16,12 +13,14 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        io.kompose.service: converted
+        app: converted
     spec:
       containers:
       - args:
         - sh
         - -c
+        - mount -t nfs singlefs-1-vm:/data /data &&
+        - mkdir /data/converted &&
         - python -m http.server 8000
         env:
         - name: DESTINATION
@@ -29,13 +28,9 @@ spec:
         image: python:latest
         name: converted
         resources: {}
-        volumeMounts:
-        - mountPath: /data
-          name: pdfdata
+        
         workingDir: /data/converted
       restartPolicy: Always
-      volumes:
-      - name: pdfdata
-        persistentVolumeClaim:
-          claimName: pdfdata
+    
+ 
 status: {}
