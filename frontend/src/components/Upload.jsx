@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import DropzoneComponent from 'react-dropzone-component'
 
-import 'css/filepicker.css'
+import './css/filepicker.css'
 
 import { withStyles } from '@material-ui/core/styles'
 import FolderList from './folderList'
