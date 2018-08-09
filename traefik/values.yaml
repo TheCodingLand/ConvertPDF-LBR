@@ -70,7 +70,7 @@ acme:
     domainsList: 
       - main: "*.pdfexp.com"
       # - sans: "pdfexp.com"
-      # - main: "pdfexp.com"
+      - main: "pdfexp.com"
       # - sans:
       #   - "test1.example2.com"
       #   - "test2.example2.com"
