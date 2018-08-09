@@ -147,7 +147,7 @@ def lookForFiles(folder):
     keys = listen.keys('uploadpdf.*')
     if len(keys) >0:
         key = keys[0]
-        info = listen.hegetall(key)
+        info = listen.hgetall(key)
         listen.delete(key)
 
         f = info.get('filename')
@@ -180,7 +180,7 @@ def lookForFiles(folder):
             i=i+1
             convertImage(pdf,option) #border to converted
             buildPdf(pdf,option,i)
-            
+           
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "completed"})
         time.sleep(1)
         pub.publish(pdf.redisKey, pdf.redisKey)
@@ -190,39 +190,10 @@ def lookForFiles(folder):
         except:
             logging.error("could not delete temp dir, will be cleaned up with cronjob")
         
-    os.chdir(folder)
-    imagefiles = glob.glob("*.jpg")
-
-    for f in imagefiles:
-        #os.chdir(workingdir)
-        
-        
-        pdf = Pdffile(f, folder, workingdir)
-        if not os.path.exists(f"{pdf.tempdir!s}"):
-            os.makedirs(f"{pdf.tempdir!s}")
-        try:
-            shutil.move(pdf.fullpath, pdf.tempdir)
-        except:
-            pass
-        os.chdir(workingdir)
-        copyImage(pdf)
-        pdf.totalpages = len(os.listdir(f'{pdf.tempdir!s}images/'))
-        logging.error(pdf.totalpages)
-        shrinkOnlyLarger(pdf) #tempdir to shrink
-        addBorderA4(pdf) #shrink to border
-        option = options[0]
-       
-        convertImage(pdf,option) #border to converted
-        imageToPdf(pdf,option)
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "completed"})
-        time.sleep(1)
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        r.expire(pdf.redisKey, 60)
-        try:
-            call(f'rm -rf {pdf.tempdir!s}', shell=True)
-        except:
-            logging.error("could not delete temp dir, will be cleaned up with cronjob")
+ 
     
+         #border to converted
+        
 while True:
     time.sleep(1)
    
