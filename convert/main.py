@@ -7,6 +7,7 @@ import sys
 logging.error(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
 logging.error(f"Connecting to REDIS {redishost!s}")
+listen = redis.StrictRedis(host=redishost, port=6379, db=2)
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
 pub = redis.StrictRedis(host=redishost, port=6379)
 #TODO Module : Refactor into a class, split classes into files, add path management for files in the class for intermediate image conversions (location of the latest conversion -> destination)
@@ -135,19 +136,24 @@ def imageToPdf(pdf,option):
     logging.error(command)
     call(command, shell=True)
     #outputpath = f"{pdf.path!s}converted/{pdfname!s}"
-    pdf.links.append(random.(pdfname)
+    pdf.links.append(pdfname)
     r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : 1 })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
 
 def lookForFiles(folder):
     time.sleep(2)
-    os.chdir(folder)
-    pdffiles = glob.glob("*.pdf")
     
+    keys = listen.keys('uploadpdf.*')
+    if len(keys) >0:
+        key = keys[0]
+        info = listen.hegetall(key)
+        listen.delete(key)
+
+        f = info.get('filename')
+        token = info.get('token')
+        
     
-    
-    for f in pdffiles:
         logging.error("Found PDFs : " )
         logging.error(f)
         

@@ -1,6 +1,8 @@
 
 var redis = require('redis');
 var io = require('socket.io')(3001);
+
+var redis = require('redis');
 const redis_host= process.env.REDIS_HOST
 
 var host = "redis://" + redis_host + ":6379";

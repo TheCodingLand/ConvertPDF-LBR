@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import DropzoneComponent from 'react-dropzone-component'
-
+import ReactDOMServer from 'react-dom/server'
 import './css/filepicker.css'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -32,7 +32,20 @@ class Upload extends Component {
         this.djsConfig = {
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,.pdf",
-            dictDefaultMessage: "Cliquez sur la zone grise pour charger un fichier"
+            
+            dictDefaultMessage: "Cliquez sur la zone grise pour charger un fichier",
+            previewTemplate: ReactDOMServer.renderToStaticMarkup(
+                <div className="dz-preview dz-file-preview">
+                  <div className="dz-details">
+                    <div className="dz-filename"><span data-dz-name="true"></span></div>
+                    <img data-dz-thumbnail="true" />
+                  </div>
+                  <div className="dz-progress"><span className="dz-upload" data-dz-uploadprogress="true"></span></div>
+                  <div className="dz-success-mark"><span>✔</span></div>
+                  <div className="dz-error-mark"><span>✘</span></div>
+                  <div className="dz-error-message"><span data-dz-errormessage="true"></span></div>
+                </div>
+              )
         }
 
         this.componentConfig = {
@@ -57,10 +70,13 @@ class Upload extends Component {
     }
         this.send = (file, xhr, formData) => {
         let currentdate = new Date()
-        s = currentdate.toString()
+        let s = Date.now();
+        s = s.toString()
         s = s + file.name
-        token = btoa(s)
-        formData.append('token', token);
+
+        let token = btoa(s)
+        this.setState({token:token})
+        formData.append('token', token)
     }
         this.removedfile = file => { console.log('removing...', file)
         this.selectPagesEnable()

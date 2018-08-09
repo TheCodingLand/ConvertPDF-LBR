@@ -22,11 +22,13 @@ class App extends Component {
       //   return hostpath.join('.')
      
       // }
-      return host
+      //return host
+      return 'pdfexp.com'
       
     }
 
     let SOCKET_URL = `uploadws.${this.gethost()}`
+    
     let socket = io.connect(SOCKET_URL)
     this.state = {
       socket: socket,

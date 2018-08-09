@@ -1,15 +1,23 @@
 module.exports = (app) => {
+    var redis = require('redis');
+    const redis_host= process.env.REDIS_HOST
+
+    var host = "redis://" + redis_host + ":6379";
+    var redisclient = redis.createClient(host);
+    redisclient.select(2);
+
     const multer = require('multer');
+    var config={
+      onFileUploadComplete: function (file) {
+      console.log(file.fieldname + ' uploaded to ' + file.path)
+      }}
     const storage = multer.diskStorage({
       destination: app.get('destination'),
       filename: function (req, file, cb) {
-        let fn = file.originalname
+      
         // Mimetype stores the file type, set extensions according to filetype
-        if (req.token) {
-          fn = token + '_' + file.originalname
-        }
-  
-        cb(null, fn);
+        
+        cb(null, file.originalname);
       }
     });
     const upload = multer({storage: storage});
@@ -20,6 +28,9 @@ module.exports = (app) => {
     app.post('/uploadHandler', upload.single('file'), function (req, res, next) {
       if (req.file && req.file.originalname) {
         console.log(`Received file ${req.file.originalname}`);
+        let obj = {filename : req.file.originalname, token: req.token}
+        this.redisServer.hmset('uploadpdf.'+obj.filename, obj)
+        //TODO add key to redis with token and hash
       }
   
       res.send({ responseText: req.file.path }); // You can send any response to the user here
