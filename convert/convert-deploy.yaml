@@ -20,7 +20,7 @@ spec:
           value: /data
         - name: REDIS_HOST
           value: redis-pdf
-        image: gcr.io/api-project-213114800966/convert:v${APPVERSION}
+        image: gcr.io/api-project-213114800966/convert
         name: convert
         resources: {}
         volumeMounts:
