@@ -1,10 +1,5 @@
 module.exports = (app) => {
-    var redis = require('redis');
-    const redis_host= process.env.REDIS_HOST
-
-    var host = "redis://" + redis_host + ":6379";
-    var redisclient = redis.createClient(host);
-    redisclient.select(2);
+    
 
     const multer = require('multer');
     
@@ -28,11 +23,11 @@ module.exports = (app) => {
     
 
 
-    app.post('/uploadHandler', upload.single('file'), function (req, res, redisclient) {
+    app.post('/uploadHandler', upload.single('file'), function (req, res, next) {
       if (req.file && req.file.originalname) {
         console.log(`Received file ${req.file.originalname}`);
         let obj = {filename : req.file.originalname, token: req.token}
-        redisclient.hmset('uploadpdf.'+obj.filename, obj)
+        app.redisclient.hmset('uploadpdf.'+obj.filename, obj)
         //TODO add key to redis with token and hash
       }
   
