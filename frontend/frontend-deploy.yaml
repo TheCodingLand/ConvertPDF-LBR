@@ -15,7 +15,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - image:  gcr.io/api-project-213114800966/frontend:v2
+      - image:  gcr.io/api-project-213114800966/frontend:v3
         name: frontend
         resources: {}
       restartPolicy: Always
