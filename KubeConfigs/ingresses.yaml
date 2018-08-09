@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: pdfapp
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: convertpdf.mytools.live
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: http
+  - host: wsupload.mytools.live
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wsupload
+          servicePort: http
+  - host: converted.mytools.live
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: converted
+          servicePort: http
+
+  - host: pdfupload.mytools.live
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: pdfupload
+          servicePort: http
