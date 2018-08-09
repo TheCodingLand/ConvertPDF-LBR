@@ -1,0 +1,147 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: 2018-08-09T09:49:30Z
+  generation: 2
+  labels:
+    app: traefik
+    chart: traefik-1.38.0
+    heritage: Tiller
+    release: traefik
+  name: traefik
+  namespace: kube-system
+  resourceVersion: "242133"
+  selfLink: /apis/extensions/v1beta1/namespaces/kube-system/deployments/traefik
+  uid: 82ea0560-9bb9-11e8-868c-42010a8400e0
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: traefik
+      release: traefik
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        checksum/config: 31ea68616919c9e2f1d5756c098a2847b5a32454ffcb466e1c2455fa98c6447c
+      creationTimestamp: null
+      labels:
+        app: traefik
+        chart: traefik-1.38.0
+        heritage: Tiller
+        release: traefik
+    spec:
+      containers:
+      - args:
+        - --configfile=/config/traefik.toml
+        env:
+        - name: GCE_PROJECT
+          valueFrom:
+            secretKeyRef:
+              key: GCE_PROJECT
+              name: traefik-dnsprovider-config
+        - name: GCE_SERVICE_ACCOUNT_FILE
+          valueFrom:
+            secretKeyRef:
+              key: GCE_SERVICE_ACCOUNT_FILE
+              name: traefik-dnsprovider-config
+        image: traefik:1.6.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 80
+          timeoutSeconds: 2
+        name: traefik
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        - containerPort: 8880
+          name: httpn
+          protocol: TCP
+        - containerPort: 443
+          name: https
+          protocol: TCP
+        - containerPort: 8080
+          name: dash
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 80
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 100m
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /ssl
+          name: ssl
+        - mountPath: /acme
+          name: acme
+        - mountPath: /clouddns
+          name: clouddns
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 60
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: traefik
+        name: config
+      - name: ssl
+        secret:
+          defaultMode: 420
+          secretName: traefik-default-cert
+      - name: acme
+        persistentVolumeClaim:
+          claimName: traefik-acme
+      - name: clouddns
+        secret:
+          defaultMode: 420
+          secretName: clouddns
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: 2018-08-09T10:36:57Z
+    lastUpdateTime: 2018-08-09T10:36:57Z
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: 2018-08-09T10:34:07Z
+    lastUpdateTime: 2018-08-09T10:36:57Z
+    message: ReplicaSet "traefik-84545cb9fb" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
