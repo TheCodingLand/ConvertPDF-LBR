@@ -28,7 +28,7 @@ module.exports = (app) => {
     
 
 
-    app.post('/uploadHandler', upload.single('file'), function (req, res, next) {
+    app.post('/uploadHandler', upload.single('file'), function (req, res, redisclient) {
       if (req.file && req.file.originalname) {
         console.log(`Received file ${req.file.originalname}`);
         let obj = {filename : req.file.originalname, token: req.token}
