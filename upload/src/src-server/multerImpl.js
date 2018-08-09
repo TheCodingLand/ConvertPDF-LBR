@@ -7,10 +7,13 @@ module.exports = (app) => {
     redisclient.select(2);
 
     const multer = require('multer');
+    
     var config={
       onFileUploadComplete: function (file) {
       console.log(file.fieldname + ' uploaded to ' + file.path)
       }}
+
+
     const storage = multer.diskStorage({
       destination: app.get('destination'),
       filename: function (req, file, cb) {
