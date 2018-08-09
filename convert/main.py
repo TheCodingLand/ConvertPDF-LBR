@@ -118,6 +118,7 @@ def shrinkOnlyLarger(pdf):
 
 def buildPdf(pdf,option,i):
     outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
+    
     command = f'pdftk {pdf.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
     #command = f'pdfunite {pdf.tempdir!s}converted/image_*.pdf "{outputPdfPath}"'
     logging.error(command)
