@@ -7,7 +7,7 @@ import sys
 logging.error(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
 logging.error(f"Connecting to REDIS {redishost!s}")
-listen = redis.StrictRedis(host=redishost, port=6379, db=2)
+listen = redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
 pub = redis.StrictRedis(host=redishost, port=6379)
 
