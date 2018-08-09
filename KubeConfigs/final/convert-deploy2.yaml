@@ -1,0 +1,41 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: convert
+  name: convert
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: convert
+    spec:
+      containers:
+      - env:
+        - name: PDFPATHORIGIN
+          value: /data
+        - name: REDIS_HOST
+          value: redis-pdf
+        image: gcr.io/api-project-213114800966/convert:v2
+        name: convert
+        resources: {}
+        volumeMounts:
+        - mountPath: "/data"
+          name: pdfdata
+      volumes:
+      - name: pdfdata
+        nfs:
+          path: "/data"
+          server: 10.132.0.10
+      restartPolicy: Always
+
+      
+status: {}
+
+
+
