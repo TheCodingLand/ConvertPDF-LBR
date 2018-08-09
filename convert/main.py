@@ -4,7 +4,7 @@ from subprocess import call
 import logging
 import redis
 import sys
-logging.info(sys.getdefaultencoding())
+logging.error(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
 pub = redis.StrictRedis(host=redishost, port=6379)
@@ -64,7 +64,7 @@ def copyImage(pdf):
         os.makedirs(f"{pdf.tempdir!s}images/")
     
     command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}" {pdf.tempdir!s}images/image_0000.jpg'
-    logging.info(command)
+    logging.error(command)
     call(command, shell=True)
 
 
@@ -75,7 +75,7 @@ def extractPages(pdf):
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "extracting pages", "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
         command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}"[{i!s}] {pdf.tempdir!s}images/image_{i:04}.jpg'
-        logging.info(command)
+        logging.error(command)
         returncode = call(command, shell=True)
         if returncode == 1:
             break
@@ -88,10 +88,10 @@ def convertImage(pdf, option):
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "applying filter", "pages": pdf.totalpages, "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
         command = f"{option.algo!s} -b {option.bias!s} -r {option.radius!s} -m {option.method!s} -n yes {pdf.tempdir!s}border/image_{i:04}.jpg {pdf.tempdir!s}converted/image_{i:04}.gif"
-        logging.info(command)
+        logging.error(command)
         call(command, shell=True)
         command= f'convert -density 200 {pdf.tempdir!s}converted/image_{i:04}.gif -compress group4 "{pdf.tempdir!s}converted/image_{i:04}.pdf"'
-        logging.info(command)
+        logging.error(command)
         call(command, shell=True)
         
 
@@ -102,7 +102,7 @@ def addBorderA4(pdf):
         command = f"convert {pdf.tempdir!s}shrink/image_{i:04}.jpg -gravity center -extent 1653x2339 {pdf.tempdir!s}border/image_{i:04}.jpg"
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
-        logging.info(command)
+        logging.error(command)
         call(command, shell=True)
 
 def shrinkOnlyLarger(pdf):
@@ -112,14 +112,14 @@ def shrinkOnlyLarger(pdf):
         command = f"convert {pdf.tempdir!s}images/image_{i:04}.jpg -resize 1653x2339\\> {pdf.tempdir!s}shrink/image_{i:04}.jpg"
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Shrink to A4", "pages": pdf.totalpages, "progress" : i })
         
-        logging.info(command)
+        logging.error(command)
         call(command, shell=True)
 
 def buildPdf(pdf,option,i):
     outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
     command = f'pdftk {pdf.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
     #command = f'pdfunite {pdf.tempdir!s}converted/image_*.pdf "{outputPdfPath}"'
-    logging.info(command)
+    logging.error(command)
     #r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished", "output": outputPdfPath })
     call(command, shell=True)
     pdf.links.append(f"{option.name}_{pdf.name!s}")
@@ -130,7 +130,7 @@ def buildPdf(pdf,option,i):
 def imageToPdf(pdf,option):
     pdfname = pdf.name.replace(".jpg",".pdf")
     command= f'convert -density 200 {pdf.tempdir!s}converted/image_*.gif -compress group4 "{pdf.path!s}converted/{pdfname!s}"'
-    logging.info(command)
+    logging.error(command)
     call(command, shell=True)
     #outputpath = f"{pdf.path!s}converted/{pdfname!s}"
     pdf.links.append(pdfname)
@@ -162,7 +162,7 @@ def lookForFiles(folder):
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "pages extracted", "pages": pdf.totalpages })
         
         pub.publish(pdf.redisKey, pdf.redisKey)
-        logging.info(pdf.totalpages)
+        logging.error(pdf.totalpages)
         shrinkOnlyLarger(pdf) #tempdir to shrink
         addBorderA4(pdf) #shrink to border
         i=0
@@ -178,7 +178,7 @@ def lookForFiles(folder):
         try:
             call(f'rm -rf {pdf.tempdir!s}', shell=True)
         except:
-            logging.info("could not delete temp dir, will be cleaned up with cronjob")
+            logging.error("could not delete temp dir, will be cleaned up with cronjob")
         
     os.chdir(folder)
     imagefiles = glob.glob("*.jpg")
@@ -197,7 +197,7 @@ def lookForFiles(folder):
         os.chdir(workingdir)
         copyImage(pdf)
         pdf.totalpages = len(os.listdir(f'{pdf.tempdir!s}images/'))
-        logging.info(pdf.totalpages)
+        logging.error(pdf.totalpages)
         shrinkOnlyLarger(pdf) #tempdir to shrink
         addBorderA4(pdf) #shrink to border
         option = options[0]
@@ -211,11 +211,10 @@ def lookForFiles(folder):
         try:
             call(f'rm -rf {pdf.tempdir!s}', shell=True)
         except:
-            logging.info("could not delete temp dir, will be cleaned up with cronjob")
+            logging.error("could not delete temp dir, will be cleaned up with cronjob")
     
 while True:
     time.sleep(1)
-    try:
-        lookForFiles(monitoringDir)
-    except:
-        continue
+   
+    lookForFiles(monitoringDir)
+    
