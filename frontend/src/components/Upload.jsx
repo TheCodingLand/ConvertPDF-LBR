@@ -34,7 +34,7 @@ class Upload extends Component {
             acceptedFiles: "image/jpeg,.pdf",
             
             dictDefaultMessage: "Cliquez sur la zone grise pour charger un fichier",
-            previewTemplate: ReactDOMServer.renderToStaticMarkup(
+            /* previewTemplate: ReactDOMServer.renderToStaticMarkup(
                 <div className="dz-preview dz-file-preview">
                   <div className="dz-details">
                     <div className="dz-filename"><span data-dz-name="true"></span></div>
@@ -45,7 +45,7 @@ class Upload extends Component {
                   <div className="dz-error-mark"><span>✘</span></div>
                   <div className="dz-error-message"><span data-dz-errormessage="true"></span></div>
                 </div>
-              )
+              ) */
         }
 
         this.componentConfig = {
