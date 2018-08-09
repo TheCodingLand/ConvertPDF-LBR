@@ -43,7 +43,7 @@ WORKDIR /usr/src/app
 
 # add app
 
-RUN wget "http://www.fmwconcepts.com/imagemagick/downloadcounter.php?scriptname=localthresh&dirname=localthresh" -O /usr/bin/localthresh
+COPY localthresh /usr/bin/localthresh
 RUN chmod 777 /usr/bin/localthresh 
 
 ADD requirements.txt requirements.txt
