@@ -1,0 +1,69 @@
+#frontend service
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: frontend
+
+#redisservice
+apiVersion: v1
+ kind: Service
+ metadata:
+   name: redis-pdf
+ spec:
+   ports:
+     - port: 6379
+       protocol: TCP
+       targetPort: 6379
+   selector:
+     app: redis-pdf
+
+#websocket service
+apiVersion: v1
+kind: Service
+metadata:
+  name: uploadws
+  labels:
+    app: uploadws
+spec:
+  ports:
+  - port: 3001
+    targetPort: 3001
+  selector:
+    app: uploadws
+
+#converted
+apiVersion: v1
+kind: Service
+metadata:
+  name: converted
+  labels:
+    app: converted
+spec:
+  ports:
+  - port: 8000
+    targetPort: 8000
+  selector:
+    app: converted
+
+#uploadpdf
+apiVersion: v1
+kind: Service
+metadata:
+  name: uploadpdf
+  labels:
+    app: uploadpdf
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: uploadpdf
+ 
