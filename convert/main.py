@@ -126,7 +126,7 @@ def shrinkOnlyLarger(pdf):
 def buildPdf(pdf,option,i):
     outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
     if pdf.name.split('.')[-1] !='pdf':
-        ext = pdf.name.split('.')[:-1]
+        ext = pdf.name.split('.')[-1]
         fname = pdf.name[0:-len(ext)]
         fname = fname+'pdf'
         logging.error(f'renaming output file from {pdf.name} to {fname}')
