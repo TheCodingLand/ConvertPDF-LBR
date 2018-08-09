@@ -6,21 +6,21 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: convertpdf.mytools.live
+  - host: pdfexp.com
     http:
       paths:
       - path: /
         backend:
           serviceName: frontend
           servicePort: http
-  - host: wsupload.mytools.live
+  - host: wsupload.pdfexp.com
     http:
       paths:
       - path: /
         backend:
           serviceName: wsupload
           servicePort: http
-  - host: converted.mytools.live
+  - host: converted.pdfexp.com
     http:
       paths:
       - path: /
@@ -28,7 +28,7 @@ spec:
           serviceName: converted
           servicePort: http
 
-  - host: pdfupload.mytools.live
+  - host: uploadpdf.pdfexp.com
     http:
       paths:
       - path: /
