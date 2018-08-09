@@ -10,6 +10,7 @@ logging.error(f"Connecting to REDIS {redishost!s}")
 listen = redis.StrictRedis(host=redishost, port=6379, db=2)
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
 pub = redis.StrictRedis(host=redishost, port=6379)
+
 #TODO Module : Refactor into a class, split classes into files, add path management for files in the class for intermediate image conversions (location of the latest conversion -> destination)
 #TODO ReactJS web frontend : uploads, previews, websocket, downloads, notifications.
 #TODO SERVER : API, worker queue.
