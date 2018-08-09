@@ -147,8 +147,12 @@ def lookForFiles(folder):
     
     keys = listen.keys('uploadpdf.*')
     if len(keys) >0:
+        logging.error(keys)
         key = keys[0]
+        logging.error(key)
+
         info = listen.hgetall(key)
+
         listen.delete(key)
 
         f = info.get('filename')
