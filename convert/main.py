@@ -125,12 +125,14 @@ def shrinkOnlyLarger(pdf):
 
 def buildPdf(pdf,option,i):
     outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
+    outfilename = f"{option.name}_{pdf.name!s}"
     if pdf.name.split('.')[-1] !='pdf':
         ext = pdf.name.split('.')[-1]
         fname = pdf.name[0:-len(ext)]
         fname = fname+'pdf'
         logging.error(f'renaming output file from {pdf.name} to {fname}')
         outputPdfPath=f"{pdf.path!s}converted/{option.name}_{fname!s}"
+        outfilename = f"{option.name}_{fname!s}"
         
     
     command = f'pdftk {pdf.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
@@ -138,7 +140,7 @@ def buildPdf(pdf,option,i):
     logging.error(command)
     #r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished", "output": outputPdfPath })
     call(command, shell=True)
-    pdf.links.append(f"{option.name}_{pdf.name!s}")
+    pdf.links.append(f"{outfilename!s}")
     r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "file" : i, "progress" : pdf.totalpages })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
