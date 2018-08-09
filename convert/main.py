@@ -6,6 +6,7 @@ import redis
 import sys
 logging.error(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
+logging.error(f"Connecting to REDIS {redishost!s}")
 r = redis.StrictRedis(host=redishost, port=6379, db=5)
 pub = redis.StrictRedis(host=redishost, port=6379)
 #TODO Module : Refactor into a class, split classes into files, add path management for files in the class for intermediate image conversions (location of the latest conversion -> destination)
@@ -143,16 +144,18 @@ def lookForFiles(folder):
     os.chdir(folder)
     pdffiles = glob.glob("*.pdf")
     
+    
+    
     for f in pdffiles:
+        logging.error("Found PDFs : " )
+        logging.error(f)
         
         pdf = Pdffile(f, folder, workingdir)
 
         if not os.path.exists(f"{pdf.tempdir!s}"):
             os.makedirs(f"{pdf.tempdir!s}")
-        try:
-            shutil.move(pdf.fullpath, pdf.tempdir)
-        except:
-            continue
+        shutil.move(pdf.fullpath, pdf.tempdir)
+        
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "started" })
         pub.publish(pdf.redisKey, pdf.redisKey)
         os.chdir(workingdir)
