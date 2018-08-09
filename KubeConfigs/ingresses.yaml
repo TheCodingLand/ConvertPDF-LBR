@@ -33,5 +33,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: pdfupload
+          serviceName: uploadpdf
           servicePort: http
