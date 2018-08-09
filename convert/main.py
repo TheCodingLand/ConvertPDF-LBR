@@ -74,14 +74,19 @@ def copyImage(pdf):
 def extractPages(pdf):
     if not os.path.exists(f"{pdf.tempdir!s}images/"):
         os.makedirs(f"{pdf.tempdir!s}images/")
-    for i in range(0, 2000):
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "extracting pages", "progress" : i })
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}"[{i!s}] {pdf.tempdir!s}images/image_{i:04}.jpg'
-        logging.error(command)
-        returncode = call(command, shell=True)
-        if returncode == 1:
-            break
+    if pdf.name.split('.')[-1] =='pdf':
+
+        for i in range(0, 2000):
+            r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "extracting pages", "progress" : i })
+            pub.publish(pdf.redisKey, pdf.redisKey)
+            command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}"[{i!s}] {pdf.tempdir!s}images/image_{i:04}.jpg'
+            logging.error(command)
+            returncode = call(command, shell=True)
+            if returncode == 1:
+                break
+    else:
+        copyImage(pdf)
+        
 
 
 def convertImage(pdf, option):
