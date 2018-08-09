@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from './LinearProgress'
+
 const styles = theme => ({
     root: {
       flexGrow: 1,

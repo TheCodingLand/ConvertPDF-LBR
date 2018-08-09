@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: frontend
+  name: frontend
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image:  gcr.io/api-project-213114800966/frontend:v2
+        name: frontend
+        resources: {}
+      restartPolicy: Always
+status: {}
