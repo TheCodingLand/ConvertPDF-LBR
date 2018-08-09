@@ -6,7 +6,7 @@ metadata:
     app: convert
   name: convert
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
     type: Recreate
   template:
