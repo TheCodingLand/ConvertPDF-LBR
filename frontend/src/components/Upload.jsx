@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import DropzoneComponent from 'react-dropzone-component'
 
-import 'react-dropzone-component/styles/filepicker.css'
+import 'css/filepicker.css'
 
 import { withStyles } from '@material-ui/core/styles'
 import FolderList from './folderList'
@@ -31,7 +31,8 @@ class Upload extends Component {
         // please consult http://www.dropzonejs.com/#configuration
         this.djsConfig = {
             addRemoveLinks: true,
-            acceptedFiles: "image/jpeg,.pdf"
+            acceptedFiles: "image/jpeg,.pdf",
+            dictDefaultMessage: "Cliquez sur la zone grise pour charger un fichier"
         }
 
         this.componentConfig = {
