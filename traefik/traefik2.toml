@@ -1,0 +1,27 @@
+    logLevel = "INFO"
+    defaultEntryPoints = ["http","https"] 
+    [entryPoints]
+     [entryPoints.http] 
+       address = ":80"
+     [entryPoints.http.redirect] 
+       entryPoint = "https"
+       [entryPoints.https] 
+         address = ":443" 
+         compress = true 
+        [entryPoints.https.tls] 
+          [[entryPoints.https.tls.certificates]]
+            CertFile = "/ssl/tls.crt" 
+            KeyFile = "/ssl/tls.key" 
+    [kubernetes] 
+    [acme] 
+    email ="aureussz@gmail.com" 
+    storage = "/acme/acme.json" 
+    entryPoint = "https" 
+    onHostRule= true 
+    [acme.dnsChallenge] 
+     provider = "gcloud" 
+    [[acme.domains]] 
+      main = "pdfexp.com"
+      sans = ["converted.pdfexp.com","uploadws.pdfexp.com","uploadpdf.pdfexp.com"]
+    [web]
+    address = ":8080"
