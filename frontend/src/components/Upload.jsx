@@ -55,7 +55,13 @@ class Upload extends Component {
 
         this.removedfile(file)   
     }
-
+        this.send = (file, xhr, formData) => {
+        let currentdate = new Date()
+        s = currentdate.toString()
+        s = s + file.name
+        token = btoa(s)
+        formData.append('token', token);
+    }
         this.removedfile = file => { console.log('removing...', file)
         this.selectPagesEnable()
         }
@@ -105,7 +111,8 @@ class Upload extends Component {
             drop: this.callbackArray,
             addedfile: this.added,
             success: this.success,
-            removedfile: this.removedfile
+            removedfile: this.removedfile,
+            sending:this.send 
         }
 
             return (

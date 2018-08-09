@@ -3,11 +3,13 @@ module.exports = (app) => {
     const storage = multer.diskStorage({
       destination: app.get('destination'),
       filename: function (req, file, cb) {
-        
+        let fn = file.originalname
         // Mimetype stores the file type, set extensions according to filetype
-        
+        if (req.token) {
+          fn = token + '_' + file.originalname
+        }
   
-        cb(null, file.originalname);
+        cb(null, fn);
       }
     });
     const upload = multer({storage: storage});

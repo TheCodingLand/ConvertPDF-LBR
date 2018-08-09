@@ -135,7 +135,7 @@ def imageToPdf(pdf,option):
     logging.error(command)
     call(command, shell=True)
     #outputpath = f"{pdf.path!s}converted/{pdfname!s}"
-    pdf.links.append(pdfname)
+    pdf.links.append(random.(pdfname)
     r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : 1 })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
