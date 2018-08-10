@@ -79,6 +79,7 @@ class Upload extends Component {
         s = s + file.name
 
         let token = btoa(s)
+        token = token.slice(0,10)
         this.setState({token:token})
         formData.append('token', token)
     }
