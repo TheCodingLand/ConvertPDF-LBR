@@ -121,7 +121,7 @@ def shrinkOnlyLarger(pdf):
     for i in range(0,pdf.totalpages):
         command = f"convert {pdf.tempdir!s}images/image_{i:04}.jpg -resize 1653x2339\\> {pdf.tempdir!s}shrink/image_{i:04}.jpg"
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Shrink to A4", "pages": pdf.totalpages, "progress" : i })
-        
+        pub.publish(pdf.redisKey, pdf.redisKey)
         logging.info(command)
         call(command, shell=True)
 
