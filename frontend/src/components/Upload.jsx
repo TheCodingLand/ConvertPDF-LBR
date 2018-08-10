@@ -54,6 +54,7 @@ class Upload extends Component {
             postUrl: 'https://uploadpdf.'+this.props.host+'/uploadHandler'
         }
 
+        
         // If you want to attach multiple callbacks, simply
         // create an array filled with all your callbacks.
         this.callbackArray = [() => console.log('Hi!'), () => console.log('Ho!')]
