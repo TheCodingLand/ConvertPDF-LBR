@@ -4,6 +4,7 @@ from subprocess import call
 import logging
 import redis
 import sys
+logging.basicConfig(level=logging.DEBUG)
 logging.info(sys.getdefaultencoding())
 redishost =os.environ.get('REDIS_HOST')
 logging.info(f"Connecting to REDIS {redishost!s}")
