@@ -15,6 +15,8 @@ tmpM2="$dir/autothresh1_M_$$.cache"
 tmpT1="$dir/autothresh1_T_$$.mpc"
 tmpT2="$dir/autothresh1_T_$$.cache"
 
+trap "rm -f $tmpA1 $tmpA2 $tmpT1 $tmpT2 $tmpM1 $tmpM2; exit 0" 0
+trap "rm -f $tmpA1 $tmpA2 $tmpT1 $tmpT2 $tmpM1 $tmpM2; exit 1" 1 2 3 15
 
     radius=`convert xc: -format "%[fx:$radius/3]" info:`
 	size="0x${radius}"
