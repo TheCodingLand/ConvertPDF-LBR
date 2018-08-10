@@ -3,7 +3,7 @@ dir="."
 infile="$1"
 outfile="$2"
 radius="$3"
-bias = "$4"
+bias="$4"
 
 PROGNAME=`type $0 | awk '{print $3}'`  # search for executable on path
 PROGDIR=`dirname $PROGNAME`            # extract directory of program
