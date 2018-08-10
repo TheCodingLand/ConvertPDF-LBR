@@ -7,6 +7,7 @@
     "@material-ui/icons": "^2.0.1",
     "axios": "^0.18.0",
     "jspdf": "^1.4.1",
+    "pdfjs": "^2.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-dropzone": "^4.2.12",
