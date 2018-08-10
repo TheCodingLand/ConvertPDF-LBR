@@ -125,7 +125,10 @@ def shrinkOnlyLarger(pdf):
         call(command, shell=True)
 
 def buildPdf(pdf,option,i):
-    os.makedirs(f"{pdf.path!s}converted/{pdf.token}")
+    try:
+        os.makedirs(f"{pdf.path!s}converted/{pdf.token}")
+    except FileExistsError:
+        logging.info('folder already created')
     outputPdfPath=f"{pdf.path!s}converted/{pdf.token}/{option.name}_{pdf.name!s}"
     outfilename = f"{option.name}_{pdf.name!s}"
     if pdf.name.split('.')[-1] !='pdf':
