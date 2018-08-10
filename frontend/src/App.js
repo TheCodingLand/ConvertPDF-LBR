@@ -27,7 +27,7 @@ class App extends Component {
       
     }
 
-    let SOCKET_URL = `uploadws.${this.gethost()}`
+    let SOCKET_URL = `https://uploadws.${this.gethost()}`
     
     let socket = io.connect(SOCKET_URL)
     this.state = {

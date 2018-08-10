@@ -21,7 +21,14 @@ module.exports = (app) => {
     const upload = multer({storage: storage});
     
     
+    callback = (req, res, next) => {
+      if (req.file && req.file.originalname) {
+        console.log(`Received file ${req.file.originalname}`);
+        let obj = {filename : req.file.originalname, token: req.token}
+      app.redisclient.hmset('uploadpdf.'+obj.filename, obj)
+      }
 
+    }
 
     app.post('/uploadHandler', upload.single('file'), function (req, res, next) {
       if (req.file && req.file.originalname) {

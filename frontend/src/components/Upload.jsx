@@ -9,6 +9,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from './LinearProgress'
+import Disclaimer from './Disclaimer';
+
 
 const styles = theme => ({
     root: {
@@ -134,6 +136,8 @@ class Upload extends Component {
 
             return (
               <section>
+                 <Disclaimer/>
+                 
                 {this.state.conversion ==='idle' ?
                 <div className="dropzone" > 
                   <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig}></DropzoneComponent>    
@@ -160,7 +164,9 @@ class Upload extends Component {
                     }
                   </Grid>
                 </aside>
+                
               </section>
+              
             )
           }
         }
