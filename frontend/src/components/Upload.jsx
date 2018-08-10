@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from './LinearProgress'
 import Disclaimer from './Disclaimer';
+import GeneratePub from './GeneratePub';
 
 
 const styles = theme => ({
@@ -136,6 +137,10 @@ class Upload extends Component {
 
             return (
               <section>
+                  <GeneratePub/>
+
+
+
                  <Disclaimer/>
                  
                 {this.state.conversion ==='idle' ?
