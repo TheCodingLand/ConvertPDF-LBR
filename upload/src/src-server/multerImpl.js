@@ -34,6 +34,8 @@ module.exports = (app) => {
     app.post('/uploadHandler', upload.single('file'), function (req, res, next) {
       if (req.file && req.file.originalname) {
         console.log(`Received file ${req.file.originalname}`);
+        console.log(req)
+        console.log(req.post)
         let obj = {filename : req.file.originalname, token: req.token}
         app.redisclient.hmset('uploadpdf.'+obj.filename, obj)
         //TODO add key to redis with token and hash
