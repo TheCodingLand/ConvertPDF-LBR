@@ -24,6 +24,7 @@ module.exports = (app) => {
     callback = (req, res, next) => {
       if (req.file && req.file.originalname) {
         console.log(`Received file ${req.file.originalname}`);
+        console.log(req)
         let obj = {filename : req.file.originalname, token: req.token}
       app.redisclient.hmset('uploadpdf.'+obj.filename, obj)
       }
