@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Kube from '@material-ui/icons/Kuberne'
 
 const styles = {
   card: {
@@ -51,8 +52,10 @@ function SimpleCard(props) {
             Le code source est libre, et toujours en cours d'amélioration.
             Ce système n'a aucun lien avec direct avec le LBR. 
             <br />
-            Algorythme optimisé par réseaux neuronaux, sur google cloud engine.
-            
+            Algorithme optimisé par réseaux neuronaux.
+            <br />
+            Powered by <i class="fab fa-docker"></i> and Kubernetes on GKE.
+
           </Typography>
         </CardContent>
         <CardActions>
