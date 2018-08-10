@@ -42,8 +42,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # add app
-
-COPY localthresh /usr/bin/localthresh
+ADD localthresh /usr/bin/localthresh
 RUN chmod 777 /usr/bin/localthresh 
 
 ADD requirements.txt requirements.txt
