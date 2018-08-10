@@ -73,7 +73,8 @@ class Upload extends Component {
         this.removedfile(file)   
     }
         this.send = (file, xhr, formData) => {
-        let currentdate = new Date()
+        this.setState({links=[]})
+            let currentdate = new Date()
         let s = Date.now();
         s = s.toString()
         s = s + file.name
