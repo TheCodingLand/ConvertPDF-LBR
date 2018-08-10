@@ -15,13 +15,13 @@ tmpM2="$dir/autothresh1_M_$$.cache"
 tmpT1="$dir/autothresh1_T_$$.mpc"
 tmpT2="$dir/autothresh1_T_$$.cache"
 
-radius=`convert xc: -format "%[fx:$radius/3]" info:`
-size="0x${radius}"
 
+    radius=`convert xc: -format "%[fx:$radius/3]" info:`
+	size="0x${radius}"
 
 convert -quiet "$infile" -colorspace gray -alpha off +repage "$tmpA1"
-convert $tmpA1 -negate $tmpA1
+#convert $tmpA1 -negate $tmpA1
 convert $tmpA1 -blur "$size" $tmpM1
 convert $tmpA1 $tmpM1 +swap -compose minus -composite -threshold ${bias}% $tmpT1
-convert $tmpT1 -negate "$outfile"
-
+#convert $tmpT1 -negate "$outfile"
+convert $tmpT1 "$outfile"
