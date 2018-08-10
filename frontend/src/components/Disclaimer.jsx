@@ -6,7 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Kube from '@material-ui/icons/Kuberne'
+
 
 const styles = {
   card: {
@@ -38,12 +38,14 @@ function SimpleCard(props) {
           <Typography variant="headline" component="h2">
             Convertisseur PDF
 <br />
-            {bull}
-            
+            {bull}<br />
+            EXPERIMENTAL  
+            <br />
             {bull}{bull}
             
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
+          
           Ce système a été conçu pour faciliter le traitement d'une erreur commune lors du chargement d'un document pdf sur le site du Luxembourg Business Registers.
           cliquez sur la zone grise ci-dessous pour selectionner un fichier.
           Une fois chargé, des liens seront affichés pour télécharger les documents.
@@ -54,12 +56,12 @@ function SimpleCard(props) {
             <br />
             Algorithme optimisé par réseaux neuronaux.
             <br />
-            Powered by <i class="fab fa-docker"></i> and Kubernetes on GKE.
+            Powered by Docker and Kubernetes on GKE.
 
           </Typography>
         </CardContent>
         <CardActions>
-          <Button href='https://github.com/TheCodingLand/ConvertPDF-LBR' size="small">En Savoir plus :</Button>
+         
         </CardActions>
       </Card>
     </div>

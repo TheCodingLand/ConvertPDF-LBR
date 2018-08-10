@@ -137,10 +137,7 @@ class Upload extends Component {
 
             return (
               <section>
-                  <GeneratePub/>
-
-
-
+             
                  <Disclaimer/>
                  
                 {this.state.conversion ==='idle' ?
