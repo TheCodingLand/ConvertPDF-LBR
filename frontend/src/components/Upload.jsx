@@ -136,7 +136,8 @@ class Upload extends Component {
 
             return (
               <section>
-                  <Disclaimer/>
+                 <Disclaimer/>
+                 
                 {this.state.conversion ==='idle' ?
                 <div className="dropzone" > 
                   <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig}></DropzoneComponent>    
