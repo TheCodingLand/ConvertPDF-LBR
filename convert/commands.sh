@@ -19,6 +19,10 @@ tmpT2="$dir/autothresh1_T_$$.cache"
     radius=`convert xc: -format "%[fx:$radius/3]" info:`
 	size="0x${radius}"
 
+echo "radius is : $radius"
+echo "bias is : $bias"
+echo "size is : $size"
+
 convert -quiet "$infile" -colorspace gray -alpha off +repage "$tmpA1"
 #convert $tmpA1 -negate $tmpA1
 convert $tmpA1 -blur "$size" $tmpM1
