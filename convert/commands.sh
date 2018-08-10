@@ -24,7 +24,9 @@ echo "bias is : $bias"
 echo "size is : $size"
 
 convert -quiet "$infile" -colorspace gray -alpha off +repage "$tmpA1"
-#convert $tmpA1 -negate $tmpA1
+
+convert $tmpA1 -negate $tmpA1
+
 convert $tmpA1 -blur "$size" $tmpM1
 convert $tmpA1 $tmpM1 +swap -compose minus -composite -threshold ${bias}% $tmpT1
 #convert $tmpT1 -negate "$outfile"
