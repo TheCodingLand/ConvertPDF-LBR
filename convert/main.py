@@ -96,7 +96,7 @@ def convertImage(pdf, option):
     for i in range(0,pdf.totalpages):
         r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "applying filter", "pages": pdf.totalpages, "progress" : i })
         pub.publish(pdf.redisKey, pdf.redisKey)
-        command = f"{option.algo!s} -b {option.bias!s} -r {option.radius!s} -m {option.method!s} -n yes {pdf.tempdir!s}border/image_{i:04}.jpg {pdf.tempdir!s}converted/image_{i:04}.gif"
+        command = f"{option.algo!s} {pdf.tempdir!s}border/image_{i:04}.jpg {pdf.tempdir!s}converted/image_{i:04}.gif {option.radius!s} {option.bias!s}"
         logging.error(command)
         call(command, shell=True)
         command= f'convert -density 200 {pdf.tempdir!s}converted/image_{i:04}.gif -compress group4 "{pdf.tempdir!s}converted/image_{i:04}.pdf"'
