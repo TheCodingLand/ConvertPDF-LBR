@@ -22,10 +22,11 @@ os.environ['MAGICK_FILES_LIMIT']="1024MB" # Don't open more than *file handles
 
 
 class Pdffile(object):
-    def __init__(self, f, folder, workingdir):
+    def __init__(self, f, folder, workingdir, token):
         self.name = f
         self.path = folder
         self.workingdir = workingdir
+        self.token = token
         self.tempdir = f"{self.workingdir!s}/{random.randint(0,9999999)!s}/"
         self.fullpath = f"{self.path!s}{self.name!s}"
         #self.redisKey = f"conversion.{self.name!s}".encode('latin-1','surrogatepass')
@@ -124,14 +125,15 @@ def shrinkOnlyLarger(pdf):
         call(command, shell=True)
 
 def buildPdf(pdf,option,i):
-    outputPdfPath=f"{pdf.path!s}converted/{option.name}_{pdf.name!s}"
+    os.makedirs(f"{pdf.path!s}converted/{pdf.token}")
+    outputPdfPath=f"{pdf.path!s}converted/{pdf.token}/{option.name}_{pdf.name!s}"
     outfilename = f"{option.name}_{pdf.name!s}"
     if pdf.name.split('.')[-1] !='pdf':
         ext = pdf.name.split('.')[-1]
         fname = pdf.name[0:-len(ext)]
         fname = fname+'pdf'
         logging.error(f'renaming output file from {pdf.name} to {fname}')
-        outputPdfPath=f"{pdf.path!s}converted/{option.name}_{fname!s}"
+        outputPdfPath=f"{pdf.path!s}converted/{pdf.token}/{option.name}_{fname!s}"
         outfilename = f"{option.name}_{fname!s}"
         
     
@@ -140,7 +142,7 @@ def buildPdf(pdf,option,i):
     logging.error(command)
     #r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished", "output": outputPdfPath })
     call(command, shell=True)
-    pdf.links.append(f"{outfilename!s}")
+    pdf.links.append(f"{pdf.token}/{outfilename!s}")
     r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "file" : i, "progress" : pdf.totalpages })
     time.sleep(1)
     pub.publish(pdf.redisKey, pdf.redisKey)
@@ -170,13 +172,13 @@ def lookForFiles(folder):
         listen.delete(key)
 
         f = info.get('filename')
-        token = info.get('token')
+        #token = info.get('token')
         
     
         logging.error("Found PDFs : " )
         logging.error(f)
         
-        pdf = Pdffile(f, folder, workingdir)
+        pdf = Pdffile(f, folder, workingdir, token)
 
         if not os.path.exists(f"{pdf.tempdir!s}"):
             os.makedirs(f"{pdf.tempdir!s}")
