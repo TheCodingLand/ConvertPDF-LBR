@@ -10,8 +10,10 @@ const normalise = (value,max) => (value) * 100 / (max)
 export default function Progress(props) {
   return (
     <React.Fragment>
+      <br />
       
       <LinearProgress variant="determinate" value={normalise(props.value, props.max)} />
+      <br />
     </React.Fragment>
   )
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
-import Upload from './components/Upload'
+import Layout from './components/Layout'
 import AppBar from './components/AppBar'
 import io from 'socket.io-client'
 
@@ -49,7 +49,7 @@ class App extends Component {
     return (
       <div className="App">
          
-          {this.state.socket.connected ==true ? <div> <AppBar /><Upload host={this.state.host} socket={this.state.socket}/></div> :<CircularProgress style={{ color: purple[500] }} thickness={7} /> }
+          {this.state.socket.connected ==true ? <div> <AppBar /><Layout host={this.state.host} socket={this.state.socket}/></div> :<CircularProgress style={{ color: purple[500] }} thickness={7} /> }
           
       </div>
     );

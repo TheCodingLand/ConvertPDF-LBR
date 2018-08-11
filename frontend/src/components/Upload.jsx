@@ -9,7 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from './LinearProgress'
-import Disclaimer from './Disclaimer';
+import Disclaimer from './DisclaimerList';
 
 
 
@@ -28,7 +28,8 @@ class Upload extends Component {
             filestate : {},
             links:[],
             filename : "",
-            conversion : "idle"
+            conversion : "idle",
+            message:"Cliquez sur la zone grise pour charger un fichier"
         }
         // For a full list of possible configurations,
         // please consult http://www.dropzonejs.com/#configuration
@@ -36,7 +37,7 @@ class Upload extends Component {
             addRemoveLinks: true,
             acceptedFiles: "image/jpeg,.pdf",
             
-            dictDefaultMessage: "Cliquez sur la zone grise pour charger un fichier",
+            dictDefaultMessage: this.state.message,
             /* previewTemplate: ReactDOMServer.renderToStaticMarkup(
                 <div className="dz-preview dz-file-preview">
                   <div className="dz-details">
@@ -63,7 +64,6 @@ class Upload extends Component {
         this.callbackArray = [() => console.log('Hi!'), () => console.log('Ho!')]
         
         // Simple callbacks work too, of course
-        this.added = () => {}
         this.success = file => { console.log('uploaded', file) 
         this.setState({conversion:"started",filename:file.name})
         //this.props.socket.send("message", file.name ) 
@@ -72,7 +72,8 @@ class Upload extends Component {
     }
         this.send = (file, xhr, formData) => {
         this.setState({links:[]})
-            let currentdate = new Date()
+
+        let currentdate = new Date()
         let s = Date.now();
         s = s.toString()
         s = s + file.name
@@ -140,7 +141,7 @@ class Upload extends Component {
             return (
               <section>
              
-                 <Disclaimer/>
+                
                  
                 {this.state.conversion ==='idle' ?
                 <div className="dropzone" > 
