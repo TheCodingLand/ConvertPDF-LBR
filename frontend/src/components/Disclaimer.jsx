@@ -42,15 +42,7 @@ function DisclaimerList(props) {
   
   return (
     <div className={classes.root}>
-      <Typography variant="headline" component="h2">
-            Convertisseur PDF
-<br />
-{bull}{bull}{bull}<br />
-            EXPERIMENTAL  
-            <br />
-            
-            
-          </Typography>
+      
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>Plus d'infos :</Typography>

@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Upload from './Upload'
 import Disclaimer from './Disclaimer'
-
+import Header from './Header'
 
 function Layout(props) {
     const { classes } = props;
@@ -19,6 +19,13 @@ function Layout(props) {
       <Fragment>
       
       <Grid container justify="center">
+      <Grid item sm={8} md={8} xs={12}>
+      <Grid container justify="center">
+      <Grid item sm={8} md={8} xs={12}>
+      <Header/>
+      </Grid>
+      </Grid>
+      </Grid>
       <Grid item sm={8} md={8} xs={12}>
       <Disclaimer />
       </Grid>

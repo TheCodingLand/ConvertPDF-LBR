@@ -10,10 +10,17 @@ import MenuIcon from '@material-ui/icons/Menu'
 const styles = {
   root: {
     flexGrow: 1,
+    
+  },
+  bar: {
+  color:"primary",
+  backgroundColor:"red",
+  opacity:.6,
   },
   menuButton: {
     marginLeft: -18,
     marginRight: 10,
+    
   },
 }
 
@@ -21,11 +28,12 @@ function DenseAppBar(props) {
   const { classes } = props
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar className={classes.bar} position="static">
         <Toolbar variant="dense">
-          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
+         { //<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+           // <MenuIcon />
+         // </IconButton>
+          }
           <Typography variant="title" color="inherit">
             PDF Converter
           </Typography>
