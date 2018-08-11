@@ -149,13 +149,18 @@ class Upload extends Component {
                 
                 <aside>
                 <Typography> 
-                       {this.state.name ? "Converting :"+this.state.name : ""}                   
+                       {this.state.name ? "Conversion :"+this.state.name : ""}                   
                       </Typography>
-                
-                      <Typography>       
-                      {this.state.progress ? this.state.progress+'/'+this.state.pages : ""}                   
+
+                        <Typography variant="headline" component="h2">
+                         
+                      {this.state.progress ? "Page : "+ this.state.progress : ""}
+                      {this.state.pages ? '/'+this.state.pages : "" }     
+                      </Typography >
+                      {this.state.pages?
                       <LinearProgress value={parseInt(this.state.progress, 10)} max={parseInt(this.state.pages,10)} />
-                     </Typography>
+                      :""} 
+                     
                      
                       <Typography> 
                       {this.state.status ? this.state.status : ""}                   
