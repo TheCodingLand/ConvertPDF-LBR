@@ -29,7 +29,8 @@ class Upload extends Component {
             links:[],
             filename : "",
             conversion : "idle",
-            message:"Cliquez sur la zone grise pour charger un fichier"
+            message:"Cliquez sur la zone grise pour charger un fichier",
+            visible: 'true'
         }
         // For a full list of possible configurations,
         // please consult http://www.dropzonejs.com/#configuration
@@ -65,11 +66,12 @@ class Upload extends Component {
         
         // Simple callbacks work too, of course
         this.success = file => { console.log('uploaded', file) 
-        this.setState({conversion:"started",filename:file.name})
+        this.setState({conversion:"started",filename:file.name, uploading:false})
         //this.props.socket.send("message", file.name ) 
 
         this.removedfile(file)   
     }
+        this.added = (file) => {this.setState({visible:'None', filesize:file.size, uploading:true})} 
         this.send = (file, xhr, formData) => {
         this.setState({links:[]})
         
@@ -116,7 +118,8 @@ class Upload extends Component {
        
         if (this.state.status ==="completed") {
             //this.getOutputFile()
-            this.setState({conversion:'idle'})
+            this.setState({conversion:'idle',visible:'true', uploading:false})
+        
         }
 
 }
@@ -144,19 +147,19 @@ class Upload extends Component {
                 
                  
                 {this.state.conversion ==='idle' ?
-                <div className="dropzone" > 
+                <div className="dropzone" style={{display:this.state.visible}}> 
                   <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig}></DropzoneComponent>    
-                </div>:<CircularProgress />}
-                
+                </div>:"" }
+                {this.state.uploading ? <div><Typography>Chargement du fichier en cours</Typography> <CircularProgress /></div>: ""}
                 <aside>
                 <Typography> 
                        {this.state.name ? "Conversion :"+this.state.name : ""}                   
-                      </Typography>
+                       </Typography>
 
                         <Typography variant="headline" component="h2">
                          
                       {this.state.progress ? "Page : "+ this.state.progress : ""}
-                      {this.state.pages ? '/'+this.state.pages : "" }     
+                      {this.state.pages ? this.state.pages !=='1' ? '/'+this.state.pages : "" : "" }     
                       </Typography >
                       {this.state.pages?
                       <LinearProgress value={parseInt(this.state.progress, 10)} max={parseInt(this.state.pages,10)} />
