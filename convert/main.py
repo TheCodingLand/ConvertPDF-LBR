@@ -41,6 +41,7 @@ class apiComm:
         self.redis_out.hmset(f.redisKey,{ "name" : f.name, "status" : command.name, "progress":command.page, "pages": f.totalpages, "links" : f.links })
         self.redis_pub.publish(f.redisKey, f.redisKey)
         self.redis_out.expire(f.redisKew, 60)
+        logging.info(command.command)
 
     def getNewMessage(self, service):
         keys = self.redis_in.keys(f'{service}.*')
