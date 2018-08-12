@@ -101,7 +101,7 @@ class A_file(object):
     def prepare(self):
         if not os.path.exists(f"{self.tempdir!s}"):
             os.makedirs(f"{self.tempdir!s}")
-        shutil.move(f"{in_files_dir}/{self.name}", self.tempdir)
+        shutil.move(f"{in_files_dir}/{self.name}", self.tempFile)
         self.mimetype = self.detectType()
         
         if self.mimetype == "pdf":
@@ -126,14 +126,14 @@ class A_file(object):
         while True:
             
             c = Command("Extraction des pages", \
-            f'convert -density 200 "{self.inputfile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            f'convert -density 200 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
             i=i+1
             returncode = c.run(self)
             if returncode == 1:
                 break
     def move(self):
         c = Command("Extraction des pages", \
-            f'convert -density 200 "{self.inputfile}" {self.tempdirImg}/image_0000.jpg',1)
+            f'convert -density 200 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
         c.run(self)
 
     def preview(self):
