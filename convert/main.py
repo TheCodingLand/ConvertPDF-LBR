@@ -152,6 +152,7 @@ class A_file(object):
         
         #outfile =infile = f"image_{i:04}.gif"
         size = radius/3
+        size=f"0x{radius}"
         pid=os.getpid()
         tmpA1=f"{self.tempdir}/autothresh1_A_{pid}.mpc"
         tmpA2=f"{self.tempdir}/autothresh1_A_{pid}.cache"
@@ -160,7 +161,6 @@ class A_file(object):
         tmpT1=f"{self.tempdir}/autothresh1_T_{pid}.mpc"
         tmpT2=f"{self.tempdir}/autothresh1_T_{pid}.cache"
         commands = [ 
-        
         Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
         Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
         Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
@@ -176,7 +176,8 @@ class A_file(object):
         filename= ''.join(filename[0:-1])
         filename=f'{opt.name}_{filename}.pdf'
         outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
-        os.makedirs(f"{files_out_dir!s}/{self.token}/")
+        if not os.path.exists(f"{files_out_dir!s}/{self.token}/"):
+            os.makedirs(f"{files_out_dir!s}/{self.token}/")
         self.links.append(f"{self.token}/{filename}")
         Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}").run(self)
         
