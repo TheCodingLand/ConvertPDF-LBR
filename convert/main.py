@@ -171,7 +171,7 @@ class A_file(object):
     def merge(self,opt):
 
         filename=self.name.split('.')
-        filename=filename[0:-1].join()
+        filename= ''.join(filename[0:-1])
         filename=f'{opt.name}_{filename}.pdf'
         outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
         
