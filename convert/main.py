@@ -130,6 +130,7 @@ class A_file(object):
             c = Command("Extraction des pages", \
             f'convert -density 200 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
             i=i+1
+            self.totalpages=i
             returncode = c.run(self)
             if returncode == 1:
                 break
