@@ -87,7 +87,7 @@ class A_file(object):
         call(f'rm -rf {self.tempdir!s}', shell=True)
 
     def detectType(self):
-        ft= magic.from_file(self.name, mime=True)
+        ft= magic.from_file(self.tempFile, mime=True)
         ftarray = ft.split('/')
         if len(ftarray) ==2:
             if ftarray[0] == 'image':
