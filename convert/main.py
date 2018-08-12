@@ -139,13 +139,13 @@ class A_file(object):
         c.run(self)
 
     def preview(self,option):
-        self.convertPage(f"{self.tempdirImg}/image_0000.jpg",f"image_0000.jpg",option.radius, option.bias, i)
+        self.convertPage(f"{self.tempdirImg}/image_0000.jpg",f"image_0000.jpg",option.radius, option.bias, 1)
 
         return True
     def convert(self,option):
         
         for i in range(0,self.totalpages):
-            self.convertPage(f"{self.tempdirImg}/image_{i:04}.jpg",f"image_{i:04}.pdf",option.radius, option.bias, i)
+            self.convertPage(f"{self.tempdirImg}/image_{i:04}.jpg",f"{self.tempdirImg}/image_{i:04}.pdf",option.radius, option.bias, i)
 
 
     def convertPage(self, infile, outfile,radius, bias, page):
@@ -177,8 +177,8 @@ class A_file(object):
         filename=f'{opt.name}_{filename}.pdf'
         outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
         self.links.append(f"{opt.name}_{self.name}")
-        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}")
-        return True
+        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}").run(self)
+        
 
     
 def DetectAndRun(servicename, options):
