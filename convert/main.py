@@ -63,7 +63,7 @@ class Command:
         self.page=page
 
     def run(self,f):
-        logging.info(f"runnung {self.command}")
+        logging.info(f"running {self.command}")
         comm.sendUpdate(self,f)
         returncode = call(self.command, shell=True)  
         return returncode 
@@ -100,10 +100,11 @@ class A_file(object):
         
         
     def prepare(self):
-        if not os.path.exists(f"{self.tempdir!s}"):
-            os.makedirs(f"{self.tempdir!s}")
+        if not os.path.exists(f"{self.tempdirImg!s}"):
+            os.makedirs(f"{self.tempdirImg!s}")
         shutil.move(f"{in_files_dir}/{self.name}", self.tempFile)
         self.mimetype = self.detectType()
+
         
         if self.mimetype == "pdf":
             self.extract()
