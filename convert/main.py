@@ -164,8 +164,8 @@ class A_file(object):
         commands = [ 
         Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
         Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
-        Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
-        Command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias}% {tmpT1}",page),
+        Command("Calque de flou",f"convert {tmpA1} -blur {size} {tmpM1}",page),
+        Command("Calcul des niveaux adaptatif locaux",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias}% {tmpT1}",page),
         Command("Négatif",f"convert {tmpT1} -negate {infile}.gif",page),
         Command("CCITT FAX G4",f'convert -density 200 {infile}.gif -compress group4 "{outfile}"',page),
         ]
