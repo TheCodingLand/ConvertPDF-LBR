@@ -1,226 +1,211 @@
+import magic
+
 import math
 import glob, os, random, shutil, time, re, fnmatch, sys
 from subprocess import call
 import logging
 import redis
 import sys
+
 logging.basicConfig(level=logging.DEBUG)
-logging.info(sys.getdefaultencoding())
+
 redishost =os.environ.get('REDIS_HOST')
-logging.info(f"Connecting to REDIS {redishost!s}")
-listen = redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
-r = redis.StrictRedis(host=redishost, port=6379, db=5)
-pub = redis.StrictRedis(host=redishost, port=6379)
 
-#TODO Module : Refactor into a class, split classes into files, add path management for files in the class for intermediate image conversions (location of the latest conversion -> destination)
-#TODO ReactJS web frontend : uploads, previews, websocket, downloads, notifications.
-#TODO SERVER : API, worker queue.
-
+#TODO : make configurable by config maps ? 
 os.environ['MAGICK_MEMORY_LIMIT']="1024MB" # Use up to *MB of memory before doing mmap
 os.environ['MAGICK_MAP_LIMIT']="1024MB" # Use up to *MB mmaps before caching to disk
 os.environ['MAGICK_AREA_LIMIT']="4096MB" # Use up to *MB disk space before failure
-os.environ['MAGICK_FILES_LIMIT']="1024MB" # Don't open more than *file handles
+os.environ['MAGICK_FILES_LIMIT']="1024MB"
 
+# PATHS : 
+in_files_dir = "/data"
+files_out_dir = "/data/converted"
+working_dir = "/usr/src/app"
 
-class Pdffile(object):
-    def __init__(self, f, folder, workingdir, token):
-        self.name = f
-        self.path = folder
-        self.workingdir = workingdir
-        self.token = token
-        self.tempdir = f"{self.workingdir!s}/{random.randint(0,9999999)!s}/"
-        self.fullpath = f"{self.path!s}{self.name!s}"
-        #self.redisKey = f"conversion.{self.name!s}".encode('latin-1','surrogatepass')
-        self.redisKey= f"conversion.{self.name!s}"
-        self.totalpages=0
-        self.links = []
-
+logging.info(f"Connecting to REDIS {redishost!s}")
 
 class Option(object):
-    def __init__(self, algo, bias, radius, method, name):
-        self.algo = algo
+    def __init__(self, name, bias, radius):
+        self.name = name
         self.bias = bias
         self.radius = radius
-        self.method = method
+        
+
+class apiComm:
+    def __init__(self):
+        self.redis_in= redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
+        self.redis_out = redis.StrictRedis(host=redishost, port=6379, db=5)
+        self.redis_pub = redis.StrictRedis(host=redishost, port=6379)
+
+    def sendUpdate(self,command,f):
+        self.redis_out.hmset(f.redisKey,{ "name" : f.name, "status" : command.name, "progress":command.progress, "pages": f.totalpages, "links" : f.links })
+        self.redis_pub.publish(f.redisKey, f.redisKey)
+        self.redis_out.expire(f.redisKew, 60)
+
+    def getNewMessage(self, service):
+        keys = self.redis_in.keys(f'{service}.*')
+        if len(keys) >0:
+            key = keys[0]
+            logging.info(key)
+            new_message = self.redis_in.hgetall(key)
+            self.redis_in.delete(key)
+            return new_message
+
+comm = apiComm()
+
+class Command:
+    def __init__(self, name, command, page):
+        self.name=name
+        self.command=command
+        self.page=page
+
+    def run(self,f):
+        logging.info(f"runnung {self.command}")
+        comm.sendUpdate(self,f)
+        returncode = call(self.command, shell=True)  
+        return returncode 
+
+
+class A_file(object):
+    def __init__(self, name, token, options):
         self.name = name
+        self.inputfile = f"{in_files_dir}/{self.name}"
+        self.token = token
+        self.redisKey= f"conversion.{self.name!s}"
+        self.totalpages=1
+        self.links = []
+        self.tempdir = f"{working_dir!s}/{token!s}"
+        self.tempdirImg= f"{self.tempdir!s}/images"
+        self.mimetype=""
+        self.options = options
+        
+    def cleanup(self):
+        
+        call(f'rm -rf {self.tempdir!s}', shell=True)
+
+    def detectType(self):
+        ft= magic.from_file(self.inputfile, mime=True)
+        ftarray = ft.split('/')
+        if len(ftarray) ==2:
+            if ftarray[0] == 'image':
+                return "image"
+            elif ftarray[1]=='pdf':
+                return 'pdf'
+            else:
+                return 'unsupported'
+        
+        
+    def prepare(self):
+        if not os.path.exists(f"{self.tempdir!s}"):
+            os.makedirs(f"{self.tempdir!s}")
+        shutil.move(f"{in_files_dir}/{self.name}", self.tempdir)
+        self.mimetype = self.detectType()
+        
+        if self.mimetype == "pdf":
+            self.extract()
+            self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
+        elif self.mimetype == "image":
+            self.move()
+            self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
+        else:
+            logging.error('Unsupported file type')
+            return False
+        for i in range(0,self.totalpages):
+            infile = self.tempdirImg+f"image_{i:04}.jpg"
+            commands=[
+            Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
+            Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
+        for command in commands:
+            command.run(self)
+
+    def extract(self):
+        i=0
+        while True:
+            
+            c = Command("Extraction des pages", \
+            f'convert -density 200 "{self.inputfile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            i=i+1
+            returncode = c.run(self)
+            if returncode == 1:
+                break
+    def move(self):
+        c = Command("Extraction des pages", \
+            f'convert -density 200 "{self.inputfile}" {self.tempdirImg}/image_0000.jpg',1)
+        c.run(self)
+
+    def preview(self):
+        return True
+    def convert(self,option):
+        
+        for i in range(0,self.totalpages):
+            self.convertPage(f"{self.tempdirImg}/image_{i:04}.jpg",f"image_{i:04}.pdf",option.radius, option.bias, i)
 
 
-monitoringDir = os.environ.get('PDFPATHORIGIN') + '/'
-workingdir= os.getcwd()
+    def convertPage(self, infile, outfile,radius, bias, page):
+        
+        #outfile =infile = f"image_{i:04}.gif"
+        size = radius/3
+        pid=os.getpid()
+        tmpA1=f"{self.tempdir}/autothresh1_A_{pid}.mpc"
+        tmpA2=f"{self.tempdir}/autothresh1_A_{pid}.cache"
+        tmpM1=f"{self.tempdir}/autothresh1_M_{pid}.mpc"
+        tmpM2=f"{self.tempdir}/autothresh1_M_{pid}.cache"
+        tmpT1=f"{self.tempdir}/autothresh1_T_{pid}.mpc"
+        tmpT2=f"{self.tempdir}/autothresh1_T_{pid}.cache"
+        commands = [ 
+        
+        Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
+        Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
+        Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
+        Command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias} {tmpT1}",page),
+        Command("Négatif",f"convert {tmpT1} -negate {infile}",page),
+        Command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
+        ]
+        for command in commands:
+            command.run(self)
+    def merge(self,opt):
+
+        filename=self.name.split('.')
+        filename=filename[0:-1].join()
+        filename=f'{opt.name}_{filename}.pdf'
+        outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
+        
+        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}")
+        return True
+
+    
+
+
+def DetectAndRun(servicename, options):
+    message = comm.getNewMessage(servicename)
+
+    filename = message.get('filename')
+    token= message.get('token')
+    
+    
+    logging.info("Found PDFs : " )
+    logging.info(filename)
+        
+    inputfile = A_file(filename, token, options)
+
+    inputfile.prepare()
+    for option in options:
+        inputfile.convert(option)
+        inputfile.merge(option)
+    inputfile.cleanup()
+
+
+#Upload => valider mimetype => extraire page 1
+#Preview => prendre parametre bias et radius => convertir page 1
+
 
 options = []
 
-options.append(Option(algo="localthresh",bias=5, radius=12, method=1, name= "DARK"))
-options.append(Option(algo="localthresh",bias=15, radius=5, method=1, name = "LIGHT"))
-options.append(Option(algo="localthresh",bias=3, radius=5, method=1, name = "MEDIUM"))
-
-#TODO : replace glob.glob with this and rename files lowercase
-def findfiles(which, where='.'):
-    '''Returns list of filenames from `where` path matched by 'which'
-       shell pattern. Matching is case-insensitive.'''
-    
-    # TODO: recursive param with walk() filtering
-    rule = re.compile(fnmatch.translate(which), re.IGNORECASE)
-    return [name for name in os.listdir(where) if rule.match(name)]
-
-
-def copyImage(pdf):
-    if not os.path.exists(f"{pdf.tempdir!s}images/"):
-        os.makedirs(f"{pdf.tempdir!s}images/")
-    
-    command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}" {pdf.tempdir!s}images/image_0000.jpg'
-    logging.info(command)
-    call(command, shell=True)
-
-
-def extractPages(pdf):
-    if not os.path.exists(f"{pdf.tempdir!s}images/"):
-        os.makedirs(f"{pdf.tempdir!s}images/")
-    if pdf.name.split('.')[-1] =='pdf':
-
-        for i in range(0, 2000):
-            r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "extracting pages", "progress" : i })
-            pub.publish(pdf.redisKey, pdf.redisKey)
-            command = f'convert -density 200 "{pdf.tempdir!s}{pdf.name!s}"[{i!s}] {pdf.tempdir!s}images/image_{i:04}.jpg'
-            logging.info(command)
-            returncode = call(command, shell=True)
-            if returncode == 1:
-                break
-    else:
-        copyImage(pdf)
-        
-
-
-def convertImage(pdf, option):
-    if not os.path.exists(f"{pdf.tempdir!s}converted/"):
-        os.makedirs(f"{pdf.tempdir!s}converted/")
-    for i in range(0,pdf.totalpages):
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "applying filter", "pages": pdf.totalpages, "progress" : i })
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        command = f"{option.algo!s} {pdf.tempdir!s}border/image_{i:04}.jpg {pdf.tempdir!s}converted/image_{i:04}.gif {option.radius!s} {option.bias!s}"
-        logging.info(command)
-        call(command, shell=True)
-        command= f'convert -density 200 {pdf.tempdir!s}converted/image_{i:04}.gif -compress group4 "{pdf.tempdir!s}converted/image_{i:04}.pdf"'
-        logging.info(command)
-        call(command, shell=True)
-        
-
-def addBorderA4(pdf):
-    if not os.path.exists(f"{pdf.tempdir!s}border/"):
-        os.makedirs(f"{pdf.tempdir!s}border/")
-    for i in range(0,pdf.totalpages):
-        command = f"convert {pdf.tempdir!s}shrink/image_{i:04}.jpg -gravity center -extent 1653x2339 {pdf.tempdir!s}border/image_{i:04}.jpg"
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Make A4", "pages": pdf.totalpages, "progress" : i })
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        logging.info(command)
-        call(command, shell=True)
-
-def shrinkOnlyLarger(pdf):
-    if not os.path.exists(f"{pdf.tempdir!s}shrink/"):
-        os.makedirs(f"{pdf.tempdir!s}shrink/")
-    for i in range(0,pdf.totalpages):
-        command = f"convert {pdf.tempdir!s}images/image_{i:04}.jpg -resize 1653x2339\\> {pdf.tempdir!s}shrink/image_{i:04}.jpg"
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "Shrink to A4", "pages": pdf.totalpages, "progress" : i })
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        logging.info(command)
-        call(command, shell=True)
-
-def buildPdf(pdf,option,i):
-    try:
-        os.makedirs(f"{pdf.path!s}converted/{pdf.token}")
-    except FileExistsError:
-        logging.info('folder already created')
-    outputPdfPath=f"{pdf.path!s}converted/{pdf.token}/{option.name}_{pdf.name!s}"
-    outfilename = f"{option.name}_{pdf.name!s}"
-    if pdf.name.split('.')[-1] !='pdf':
-        ext = pdf.name.split('.')[-1]
-        fname = pdf.name[0:-len(ext)]
-        fname = fname+'pdf'
-        logging.info(f'renaming output file from {pdf.name} to {fname}')
-        outputPdfPath=f"{pdf.path!s}converted/{pdf.token}/{option.name}_{fname!s}"
-        outfilename = f"{option.name}_{fname!s}"
-        
-    
-    command = f'pdftk {pdf.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
-    #command = f'pdfunite {pdf.tempdir!s}converted/image_*.pdf "{outputPdfPath}"'
-    logging.info(command)
-    #r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished", "output": outputPdfPath })
-    call(command, shell=True)
-    pdf.links.append(f"{pdf.token}/{outfilename!s}")
-    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "file" : i, "progress" : pdf.totalpages })
-    time.sleep(1)
-    pub.publish(pdf.redisKey, pdf.redisKey)
-
-def imageToPdf(pdf,option):
-    pdfname = pdf.name.replace(".jpg",".pdf")
-    command= f'convert -density 200 {pdf.tempdir!s}converted/image_*.gif -compress group4 "{pdf.path!s}converted/{pdfname!s}"'
-    logging.info(command)
-    call(command, shell=True)
-    #outputpath = f"{pdf.path!s}converted/{pdfname!s}"
-    pdf.links.append(pdfname)
-    r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "finished" , "links" : pdf.links, "progress" : 1 })
-    time.sleep(1)
-    pub.publish(pdf.redisKey, pdf.redisKey)
-
-def lookForFiles(folder):
-    time.sleep(2)
-    
-    keys = listen.keys('uploadpdf.*')
-    if len(keys) >0:
-        logging.info(keys)
-        key = keys[0]
-        logging.info(key)
-
-        info = listen.hgetall(key)
-
-        listen.delete(key)
-
-        f = info.get('filename')
-        token = info.get('token')
-        
-    
-        logging.info("Found PDFs : " )
-        logging.info(f)
-        
-        pdf = Pdffile(f, folder, workingdir, token)
-
-        if not os.path.exists(f"{pdf.tempdir!s}"):
-            os.makedirs(f"{pdf.tempdir!s}")
-        shutil.move(pdf.fullpath, pdf.tempdir)
-        
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "started" })
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        os.chdir(workingdir)
-        extractPages(pdf)
-        
-        pdf.totalpages = len(os.listdir(f'{pdf.tempdir!s}images/'))
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "pages extracted", "pages": pdf.totalpages })
-        
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        logging.info(pdf.totalpages)
-        shrinkOnlyLarger(pdf) #tempdir to shrink
-        addBorderA4(pdf) #shrink to border
-        i=0
-        for option in options:
-            i=i+1
-            convertImage(pdf,option) #border to converted
-            buildPdf(pdf,option,i)
-           
-        r.hmset(pdf.redisKey,{ "name" : pdf.name, "status" : "completed"})
-        time.sleep(1)
-        pub.publish(pdf.redisKey, pdf.redisKey)
-        r.expire(pdf.redisKey, 60)
-        try:
-            call(f'rm -rf {pdf.tempdir!s}', shell=True)
-        except:
-            logging.info("could not delete temp dir, will be cleaned up with cronjob")
-        
- 
-    
-         #border to converted
-        
+options.append(Option(bias=5, radius=12, name= "DARK"))
+options.append(Option(bias=15, radius=5, name = "LIGHT"))
+options.append(Option(bias=3, radius=5, name = "MEDIUM"))
+#Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
+#Output => ajout des links, cleanup
 while True:
-    time.sleep(1)
-   
-    lookForFiles(monitoringDir)
-    
+    time.sleep(2)
+    DetectAndRun('uploadpdf',options)
