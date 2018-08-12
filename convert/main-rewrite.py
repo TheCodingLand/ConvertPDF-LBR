@@ -36,6 +36,16 @@ class apiComm:
     def sendUpdate(self,command):
         out.hmset()
         pub.publish()
+    def getNewMessage(self, service):
+        keys = redis_in.keys(f'{service}.*')
+        if len(keys) >0:
+            key = keys[0]
+            logging.info(key)
+            new_message = redis_in.hgetall(key)
+            redis_in.delete(key)
+            return new_message
+
+        
 
 class Command:
     def __init__(self, name, command, page ):
@@ -99,12 +109,12 @@ class A_file(object):
         tmpT1=f"{tempdir}/autothresh1_T_{pid}.mpc"
         tmpT2=f"{tempdir}/autothresh1_T_{pid}.cache"
         commands = [ 
-        command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}"),page),
-        command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}"),page),
+        command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",page),
+        command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",page),
         command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
-        command("Négatif",f"convert {tmpA1} -negate {tmpA1}"),page),
-        command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}"),page),
-        command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias} {tmpT1}"),page),
+        command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
+        command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
+        command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias} {tmpT1}",page),
         command("Négatif",f"convert {tmpT1} -negate {infile}",page),
         command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
         ]
@@ -113,12 +123,26 @@ class A_file(object):
 
 
 
+def getRedisUpdates(servicename):
+    message = comm.getNewMessage(servicename)
 
+    filename = message.get('filename')
+    token= message.get'token')
+        
+    
+    logging.info("Found PDFs : " )
+    logging.info(filename)
+        
+    inputfile = A_file(filename, token)
 
+    inputfile.prepare()
+    inputfile.convert()
         
      
-Upload => valider mimetype => extraire page 1
-Preview => prendre parametre bias et radius => convertir page 1
+#Upload => valider mimetype => extraire page 1
+#Preview => prendre parametre bias et radius => convertir page 1
 
-Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
-
+#Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
+while True:
+    time.sleep(2)
+    getRedisUpdates('uploadpdf')
