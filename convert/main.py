@@ -199,7 +199,7 @@ def DetectAndRun(servicename, options):
             
             inputfile.convert(option)
             inputfile.merge(option)
-            Command('finished', f'',f"{inputfile.totalpages}")
+            Command('completed', f'',f"{inputfile.totalpages}")
             
         inputfile.cleanup()
 
