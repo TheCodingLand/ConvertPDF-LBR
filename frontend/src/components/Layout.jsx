@@ -21,7 +21,7 @@ function Layout(props) {
       <Grid container justify="center">
       <Grid item sm={8} md={8} xs={12}>
       <Grid container justify="center">
-      <Grid item sm={8} md={8} xs={12}>
+      <Grid item sm={12} md={12} xs={12}>
       <Header/>
       </Grid>
       </Grid>

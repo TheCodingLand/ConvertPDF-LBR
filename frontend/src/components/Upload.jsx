@@ -72,7 +72,7 @@ class Upload extends Component {
     }
         this.send = (file, xhr, formData) => {
         this.setState({links:[]})
-
+        
         let currentdate = new Date()
         let s = Date.now();
         s = s.toString()
@@ -84,6 +84,7 @@ class Upload extends Component {
     }   else{token = token.slice(8,24)}
         this.setState({token:token})
         formData.append('token', token)
+        //localStorage.setItem(this.state)
     }
         this.removedfile = file => { console.log('removing...', file)
         this.selectPagesEnable()
@@ -96,7 +97,6 @@ class Upload extends Component {
            
       
     }
-
     gotMessage = (message) => { 
         console.log(message)
         console.log(JSON.parse(message))

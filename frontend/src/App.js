@@ -50,7 +50,9 @@ class App extends Component {
       <div className="App">
          
           {this.state.socket.connected ==true ? <div> <AppBar /><Layout host={this.state.host} socket={this.state.socket}/></div> :<CircularProgress style={{ color: purple[500] }} thickness={7} /> }
-          <Footer />
+          {
+          //<Footer />
+        }
       </div>
     );
   }

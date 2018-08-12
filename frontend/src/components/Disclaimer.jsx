@@ -14,6 +14,7 @@ import CardContent from '@material-ui/core/CardContent';
 const styles = theme => ({
   root: {
     width: '100%',
+    marginBottom: 16,
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),

@@ -11,7 +11,7 @@ const styles = theme => ({
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2,
       backgroundColor:'red',
-      opacity:.6
+      opacity:.8
     },
     text: {
         color:'white'
@@ -23,7 +23,7 @@ function Header(props) {
   
     const bull = <span >•</span>;
     return(
-        <Paper className={classes.root} elevation={1}>
+        <Paper className={classes.root} elevation={8}>
     <Typography className={classes.text} variant="headline" component="h2">
     Convertisseur PDF
 <br />
