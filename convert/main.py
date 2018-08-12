@@ -176,7 +176,8 @@ class A_file(object):
         filename= ''.join(filename[0:-1])
         filename=f'{opt.name}_{filename}.pdf'
         outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
-        self.links.append(f"{opt.name}_{self.name}")
+        os.makedirs(outputPdfPath)
+        self.links.append(f"{self.token}/{opt.name}_{filename}")
         Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}").run(self)
         
 
