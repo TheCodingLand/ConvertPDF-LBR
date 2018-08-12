@@ -67,8 +67,10 @@ class A_file(object):
         self.totalpages=1
         self.links = []
         self.tempdir = f"{working_dir!s}/{token!s}"
-        self.tempdirImg= f"{tempdir!s}/images"
+        self.tempdirImg= f"{self.tempdir!s}/images"
         self.mimetype=""
+        self.output_filepath= f"{files_out_dir}/{self.token}/{self.option.name}_{self.name}"
+        self.linkname=f"{files_out_dir}/{self.token}/{self.option.name}_{self.name}"
 
     def prepare(self):
         if not os.path.exists(f"{self.tempdir!s}"):
@@ -82,7 +84,7 @@ class A_file(object):
         
 
     def extract(self):
-        while true:
+        while True:
             
             r.hmset(self.redisKey, {"name": self.name, "status": "extracting pages", "progress": i})
             pub.publish(self.redisKey, self.redisKey)
@@ -109,28 +111,34 @@ class A_file(object):
         tmpT1=f"{tempdir}/autothresh1_T_{pid}.mpc"
         tmpT2=f"{tempdir}/autothresh1_T_{pid}.cache"
         commands = [ 
-        command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",page),
-        command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",page),
-        command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
-        command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
-        command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
-        command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias} {tmpT1}",page),
-        command("Négatif",f"convert {tmpT1} -negate {infile}",page),
-        command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
+        Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",page),
+        Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",page),
+        Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
+        Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
+        Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
+        Command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias} {tmpT1}",page),
+        Command("Négatif",f"convert {tmpT1} -negate {infile}",page),
+        Command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
         ]
         for command in commands:
             command.run()
     def merge(self):
+        if self.totalpages>1:
 
+            command = f'pdftk {self.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
+        else:
+            command = ''
+        return True
     def cleanup(self):
+        return True
 
 
 def getRedisUpdates(servicename):
     message = comm.getNewMessage(servicename)
 
     filename = message.get('filename')
-    token= message.get'token')
-        
+    token= message.get('token')
+    
     
     logging.info("Found PDFs : " )
     logging.info(filename)
