@@ -1,3 +1,5 @@
+import magic
+
 import math
 import glob, os, random, shutil, time, re, fnmatch, sys
 from subprocess import call
@@ -22,46 +24,52 @@ working_dir = "/usr/src/app"
 
 logging.info(f"Connecting to REDIS {redishost!s}")
 
-redis_in = redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
-redis_out = redis.StrictRedis(host=redishost, port=6379, db=5)
-redis_pub = redis.StrictRedis(host=redishost, port=6379)
-
-comm = apiComm()
+class Option(object):
+    def __init__(self, name, bias, radius):
+        self.name = name
+        self.bias = bias
+        self.radius = radius
+        
 
 class apiComm:
     def __init__(self):
-        redis_in=redis_in
-        redis_out = redis_out
-        redis_pub = redis_pub
-    def sendUpdate(self,command):
-        out.hmset()
-        pub.publish()
+        self.redis_in= redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
+        self.redis_out = redis.StrictRedis(host=redishost, port=6379, db=5)
+        self.redis_pub = redis.StrictRedis(host=redishost, port=6379)
+
+    def sendUpdate(self,command,f):
+        self.redis_out.hmset(f.redisKey,{ "name" : f.name, "status" : command.name, "progress":command.progress, "pages": f.totalpages, "links" : f.links })
+        self.redis_pub.publish(f.redisKey, f.redisKey)
+        self.redis_out.expire(f.redisKew, 60)
+
     def getNewMessage(self, service):
-        keys = redis_in.keys(f'{service}.*')
+        keys = self.redis_in.keys(f'{service}.*')
         if len(keys) >0:
             key = keys[0]
             logging.info(key)
-            new_message = redis_in.hgetall(key)
-            redis_in.delete(key)
+            new_message = self.redis_in.hgetall(key)
+            self.redis_in.delete(key)
             return new_message
 
-        
+comm = apiComm()
 
 class Command:
-    def __init__(self, name, command, page ):
+    def __init__(self, name, command, page):
         self.name=name
         self.command=command
         self.page=page
 
-    def run(self,):
+    def run(self,f):
         logging.info(f"runnung {self.command}")
-        comm.sendUpdate(self)
-        call(command, shell=True)    
+        comm.sendUpdate(self,f)
+        returncode = call(self.command, shell=True)  
+        return returncode 
 
 
 class A_file(object):
-    def __init__(self, name, token):
+    def __init__(self, name, token, options):
         self.name = name
+        self.inputfile = f"{in_files_dir}/{self.name}"
         self.token = token
         self.redisKey= f"conversion.{self.name!s}"
         self.totalpages=1
@@ -69,50 +77,83 @@ class A_file(object):
         self.tempdir = f"{working_dir!s}/{token!s}"
         self.tempdirImg= f"{self.tempdir!s}/images"
         self.mimetype=""
-        self.output_filepath= f"{files_out_dir}/{self.token}/{self.option.name}_{self.name}"
-        self.linkname=f"{files_out_dir}/{self.token}/{self.option.name}_{self.name}"
+        self.options = options
+        
+    def cleanup(self):
+        
+        call(f'rm -rf {self.tempdir!s}', shell=True)
 
+    def detectType(self):
+        ft= magic.from_file(self.inputfile, mime=True)
+        ftarray = ft.split('/')
+        if len(ftarray) ==2:
+            if ftarray[0] == 'image':
+                return "image"
+            elif ftarray[1]=='pdf':
+                return 'pdf'
+            else:
+                return 'unsupported'
+        
+        
     def prepare(self):
         if not os.path.exists(f"{self.tempdir!s}"):
             os.makedirs(f"{self.tempdir!s}")
         shutil.move(f"{in_files_dir}/{self.name}", self.tempdir)
-        self.detectType()
+        self.mimetype = self.detectType()
         
         if self.mimetype == "pdf":
             self.extract()
-            self.totalpages = len(os.listdir(f'{pdf.tempdirImg}'))
-        
+            self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
+        elif self.mimetype == "image":
+            self.move()
+            self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
+        else:
+            logging.error('Unsupported file type')
+            return False
+        for i in range(0,self.totalpages):
+            infile = self.tempdirImg+f"image_{i:04}.jpg"
+            commands=[
+            Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
+            Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
+        for command in commands:
+            command.run(self)
 
     def extract(self):
+        i=0
         while True:
             
-            r.hmset(self.redisKey, {"name": self.name, "status": "extracting pages", "progress": i})
-            pub.publish(self.redisKey, self.redisKey)
-            command = f'convert -density 200 "{self.tempdir!s}/{self.name!s}"[{i!s}] {self.tempdir!s}/images/image_{i:04}.jpg'
-            logging.info(command)
-            returncode = call(command, shell=True)
+            c = Command("Extraction des pages", \
+            f'convert -density 200 "{self.inputfile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            i=i+1
+            returncode = c.run(self)
             if returncode == 1:
                 break
+    def move(self):
+        c = Command("Extraction des pages", \
+            f'convert -density 200 "{self.inputfile}" {self.tempdirImg}/image_0000.jpg',1)
+        c.run(self)
+
     def preview(self):
         return True
-    def convert(self):
+    def convert(self,option):
+        
         for i in range(0,self.totalpages):
-            convertPage(f"image_{i:04}.jpg",f"image_{i:04}.pdf",radius, bias, i)
+            self.convertPage(f"{self.tempdirImg}/image_{i:04}.jpg",f"image_{i:04}.pdf",option.radius, option.bias, i)
+
 
     def convertPage(self, infile, outfile,radius, bias, page):
-        infile = f"image_{i:04}.jpg"
+        
         #outfile =infile = f"image_{i:04}.gif"
         size = radius/3
         pid=os.getpid()
-        tmpA1=f"{tempdir}/autothresh1_A_{pid}.mpc"
-        tmpA2=f"{tempdir}/autothresh1_A_{pid}.cache"
-        tmpM1=f"{tempdir}/autothresh1_M_{pid}.mpc"
-        tmpM2=f"{tempdir}/autothresh1_M_{pid}.cache"
-        tmpT1=f"{tempdir}/autothresh1_T_{pid}.mpc"
-        tmpT2=f"{tempdir}/autothresh1_T_{pid}.cache"
+        tmpA1=f"{self.tempdir}/autothresh1_A_{pid}.mpc"
+        tmpA2=f"{self.tempdir}/autothresh1_A_{pid}.cache"
+        tmpM1=f"{self.tempdir}/autothresh1_M_{pid}.mpc"
+        tmpM2=f"{self.tempdir}/autothresh1_M_{pid}.cache"
+        tmpT1=f"{self.tempdir}/autothresh1_T_{pid}.mpc"
+        tmpT2=f"{self.tempdir}/autothresh1_T_{pid}.cache"
         commands = [ 
-        Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",page),
-        Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",page),
+        
         Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
         Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
         Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
@@ -121,19 +162,21 @@ class A_file(object):
         Command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
         ]
         for command in commands:
-            command.run()
-    def merge(self):
-        if self.totalpages>1:
+            command.run(self)
+    def merge(self,opt):
 
-            command = f'pdftk {self.tempdir!s}converted/image_*.pdf cat output "{outputPdfPath}"'
-        else:
-            command = ''
+        filename=self.name.split('.')
+        filename=filename[0:-1].join()
+        filename=f'{opt.name}_{filename}.pdf'
+        outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
+        
+        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}")
         return True
-    def cleanup(self):
-        return True
+
+    
 
 
-def getRedisUpdates(servicename):
+def DetectAndRun(servicename, options):
     message = comm.getNewMessage(servicename)
 
     filename = message.get('filename')
@@ -143,19 +186,26 @@ def getRedisUpdates(servicename):
     logging.info("Found PDFs : " )
     logging.info(filename)
         
-    inputfile = A_file(filename, token)
+    inputfile = A_file(filename, token, options)
 
     inputfile.prepare()
-    inputfile.convert()
-    inputfile.merge()
+    for option in options:
+        inputfile.convert(option)
+        inputfile.merge(option)
     inputfile.cleanup()
-        
-     
+
+
 #Upload => valider mimetype => extraire page 1
 #Preview => prendre parametre bias et radius => convertir page 1
 
+
+options = []
+
+options.append(Option(bias=5, radius=12, name= "DARK"))
+options.append(Option(bias=15, radius=5, name = "LIGHT"))
+options.append(Option(bias=3, radius=5, name = "MEDIUM"))
 #Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
 #Output => ajout des links, cleanup
 while True:
     time.sleep(2)
-    getRedisUpdates('uploadpdf')
+    DetectAndRun('uploadpdf',options)
