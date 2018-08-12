@@ -50,6 +50,8 @@ class apiComm:
             new_message = self.redis_in.hgetall(key)
             self.redis_in.delete(key)
             return new_message
+        else:
+            return False
 
 comm = apiComm()
 
@@ -178,21 +180,22 @@ class A_file(object):
 
 def DetectAndRun(servicename, options):
     message = comm.getNewMessage(servicename)
+    if message != False:
 
-    filename = message.get('filename')
-    token= message.get('token')
-    
-    
-    logging.info("Found PDFs : " )
-    logging.info(filename)
-        
-    inputfile = A_file(filename, token, options)
+        filename = message.get('filename')
+        token= message.get('token')
 
-    inputfile.prepare()
-    for option in options:
-        inputfile.convert(option)
-        inputfile.merge(option)
-    inputfile.cleanup()
+
+        logging.info("Found PDFs : " )
+        logging.info(filename)
+            
+        inputfile = A_file(filename, token, options)
+
+        inputfile.prepare()
+        for option in options:
+            inputfile.convert(option)
+            inputfile.merge(option)
+        inputfile.cleanup()
 
 
 #Upload => valider mimetype => extraire page 1
