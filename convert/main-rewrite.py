@@ -84,7 +84,7 @@ class A_file(object):
     def extract(self):
         while true:
             
-            r.hmset(self.redisKey,{ "name" : self.name, "status" : "extracting pages", "progress" : i })
+            r.hmset(self.redisKey, {"name": self.name, "status": "extracting pages", "progress": i})
             pub.publish(self.redisKey, self.redisKey)
             command = f'convert -density 200 "{self.tempdir!s}/{self.name!s}"[{i!s}] {self.tempdir!s}/images/image_{i:04}.jpg'
             logging.info(command)
@@ -97,7 +97,7 @@ class A_file(object):
         for i in range(0,self.totalpages):
             convertPage(f"image_{i:04}.jpg",f"image_{i:04}.pdf",radius, bias, i)
 
-    def convertPage(self, infile,outfile,radius, bias, page):
+    def convertPage(self, infile, outfile,radius, bias, page):
         infile = f"image_{i:04}.jpg"
         #outfile =infile = f"image_{i:04}.gif"
         size = radius/3
@@ -120,7 +120,9 @@ class A_file(object):
         ]
         for command in commands:
             command.run()
+    def merge(self):
 
+    def cleanup(self):
 
 
 def getRedisUpdates(servicename):
@@ -137,12 +139,15 @@ def getRedisUpdates(servicename):
 
     inputfile.prepare()
     inputfile.convert()
+    inputfile.merge()
+    inputfile.cleanup()
         
      
 #Upload => valider mimetype => extraire page 1
 #Preview => prendre parametre bias et radius => convertir page 1
 
 #Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
+#Output => ajout des links, cleanup
 while True:
     time.sleep(2)
     getRedisUpdates('uploadpdf')
