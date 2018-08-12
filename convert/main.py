@@ -74,6 +74,7 @@ class A_file(object):
         self.inputfile = f"{in_files_dir}/{self.name}"
         self.token = token
         self.redisKey= f"conversion.{self.name!s}"
+        self.tempFile=f"{self.tempdir}/{self.name}""
         self.totalpages=1
         self.links = []
         self.tempdir = f"{working_dir!s}/{token!s}"
@@ -86,15 +87,15 @@ class A_file(object):
         call(f'rm -rf {self.tempdir!s}', shell=True)
 
     def detectType(self):
-        ft= magic.from_file(self.inputfile, mime=True)
+        ft= magic.from_file(self.name, mime=True)
         ftarray = ft.split('/')
         if len(ftarray) ==2:
             if ftarray[0] == 'image':
                 return "image"
             elif ftarray[1]=='pdf':
-                return 'pdf'
+                return "pdf"
             else:
-                return 'unsupported'
+                return "unsupported"
         
         
     def prepare(self):
@@ -176,17 +177,13 @@ class A_file(object):
         return True
 
     
-
-
 def DetectAndRun(servicename, options):
     message = comm.getNewMessage(servicename)
     if message != False:
 
         filename = message.get('filename')
         token= message.get('token')
-
-
-        logging.info("Found PDFs : " )
+        logging.info("Found file : " )
         logging.info(filename)
             
         inputfile = A_file(filename, token, options)
