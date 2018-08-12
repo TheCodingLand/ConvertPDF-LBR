@@ -138,7 +138,9 @@ class A_file(object):
             f'convert -density 200 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
         c.run(self)
 
-    def preview(self):
+    def preview(self,option):
+        self.convertPage(f"{self.tempdirImg}/image_0000.jpg",f"image_0000.jpg",option.radius, option.bias, i)
+
         return True
     def convert(self,option):
         
@@ -174,7 +176,7 @@ class A_file(object):
         filename= ''.join(filename[0:-1])
         filename=f'{opt.name}_{filename}.pdf'
         outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
-        
+        self.links.append(f"{opt.name}_{self.name}")
         Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}")
         return True
 
@@ -192,8 +194,11 @@ def DetectAndRun(servicename, options):
 
         inputfile.prepare()
         for option in options:
+            
             inputfile.convert(option)
             inputfile.merge(option)
+            Command('finished', f'',f"{inputfile.totalpages}")
+            
         inputfile.cleanup()
 
 
