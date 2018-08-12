@@ -165,8 +165,8 @@ class A_file(object):
         Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
         Command("Flou calculé",f"convert {tmpA1} -blur {size} {tmpM1}",page),
         Command("Calcul des niveaux Adaptatif locaux :",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias}% {tmpT1}",page),
-        Command("Négatif",f"convert {tmpT1} -negate {infile}",page),
-        Command("CCITT FAX G4",f'convert -density 200 {infile!s} -compress group4 "{outfile}"',page),
+        Command("Négatif",f"convert {tmpT1} -negate {infile}.gif",page),
+        Command("CCITT FAX G4",f'convert -density 200 {infile}.gif -compress group4 "{outfile}"',page),
         ]
         for command in commands:
             command.run(self)
