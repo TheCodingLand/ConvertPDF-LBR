@@ -74,11 +74,11 @@ class A_file(object):
         self.inputfile = f"{in_files_dir}/{self.name}"
         self.token = token
         self.redisKey= f"conversion.{self.name!s}"
-        self.tempFile=f"{self.tempdir}/{self.name}""
         self.totalpages=1
         self.links = []
         self.tempdir = f"{working_dir!s}/{token!s}"
         self.tempdirImg= f"{self.tempdir!s}/images"
+        self.tempFile=f"{self.tempdir}/{self.name}"
         self.mimetype=""
         self.options = options
         
