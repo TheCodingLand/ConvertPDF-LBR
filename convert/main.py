@@ -152,7 +152,7 @@ class A_file(object):
         
         #outfile =infile = f"image_{i:04}.gif"
         size = radius/3
-        size=f"0x{radius}"
+        size=f"0x{size}"
         pid=os.getpid()
         tmpA1=f"{self.tempdir}/autothresh1_A_{pid}.mpc"
         tmpA2=f"{self.tempdir}/autothresh1_A_{pid}.cache"
