@@ -22,7 +22,7 @@ in_files_dir = "/data"
 files_out_dir = "/data/converted"
 working_dir = "/usr/src/app"
 
-logging.info(f"Connecting to REDIS {redishost!s}")
+#logging.info(f"Connecting to REDIS {redishost!s}")
 
 class Option(object):
     def __init__(self, name, bias, radius):
@@ -41,13 +41,13 @@ class apiComm:
         self.redis_out.hmset(f.redisKey,{ "name" : f.name, "status" : command.name, "progress":command.page, "pages": f.totalpages, "links" : f.links })
         self.redis_pub.publish(f.redisKey, f.redisKey)
         self.redis_out.expire(f.redisKey, 60)
-        logging.info(command.command)
+        #logging.info(command.command)
 
     def getNewMessage(self, service):
         keys = self.redis_in.keys(f'{service}.*')
         if len(keys) >0:
             key = keys[0]
-            logging.info(key)
+            #logging.info(key)
             new_message = self.redis_in.hgetall(key)
             self.redis_in.delete(key)
             return new_message
@@ -63,7 +63,7 @@ class Command:
         self.page=page
 
     def run(self,f):
-        logging.info(f"running {self.command}")
+        #logging.info(f"running {self.command}")
         comm.sendUpdate(self,f)
         returncode = call(self.command, shell=True)  
         return returncode 
@@ -190,8 +190,8 @@ def DetectAndRun(servicename, options):
 
         filename = message.get('filename')
         token= message.get('token')
-        logging.info("Found file : " )
-        logging.info(filename)
+        #logging.info("Found file : " )
+        #logging.info(filename)
             
         inputfile = A_file(filename, token, options)
 
