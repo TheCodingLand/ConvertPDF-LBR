@@ -14,7 +14,7 @@ const styles = {
   },
   bar: {
   color:"primary",
-  backgroundColor:"red",
+
   opacity:.8,
   },
   menuButton: {

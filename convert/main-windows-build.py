@@ -1,10 +1,8 @@
 import magic
 
-import math
 import glob, os, random, shutil, time, re, fnmatch, sys
 from subprocess import call
 import logging
-import redis
 import sys
 
 logging.basicConfig(level=logging.DEBUG)
