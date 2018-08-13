@@ -42,8 +42,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # add app
-ADD localthresh /usr/bin/localthresh
-RUN chmod 777 /usr/bin/localthresh 
+#ADD localthresh /usr/bin/localthresh
+#RUN chmod 777 /usr/bin/localthresh 
 
 ADD requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
