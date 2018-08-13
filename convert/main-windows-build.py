@@ -105,6 +105,7 @@ class A_file(object):
         #self.mimetype = self.detectType()
 
         self.extract()
+        self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
         """  if self.mimetype == "pdf":
             self.extract()
             self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
