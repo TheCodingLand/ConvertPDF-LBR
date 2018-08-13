@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid'
+
 const styles = {
   card: {
 
@@ -46,12 +47,21 @@ function SimpleMediaCard(props) {
           </Button>
          
         </Grid>
-        <Grid item sm={6} md={6} xs={6}>
-          <CardMedia
+        <Grid item sm={3} md={3} xs={3}>
+    
+          <CardMedia onClick={()=> window.open("https://www.linkedin.com/in/julien-le-bourg-184a6a9", "_blank")}
           className={classes.media}
           image="https://avatars3.githubusercontent.com/u/2324869?s=460&v=4"
           title="Julien Le Bourg"
         />
+   
+        </Grid>
+        <Grid item sm={3} md={3} xs={3}>
+        <i size='5' class="fab fa-linkedin"></i><br />
+        <a href="https://www.linkedin.com/in/julien-le-bourg-184a6a9">LinkedIn</a>
+
+
+   
         </Grid>
         </Grid>
         </CardContent>
