@@ -1,5 +1,5 @@
-import magic
-
+#import magic
+import argparse
 import glob, os, random, shutil, time, re, fnmatch, sys
 from subprocess import call
 import logging
@@ -16,11 +16,11 @@ os.environ['MAGICK_AREA_LIMIT']="4096MB" # Use up to *MB disk space before failu
 os.environ['MAGICK_FILES_LIMIT']="1024MB"
 
 # PATHS : 
-in_files_dir = "/data"
-files_out_dir = "/data/converted"
-working_dir = "/usr/src/app"
+#in_files_dir = "/data"
+files_out_dir = "c:\\temp\\converted"
+working_dir = "c:\\temp"
 
-logging.info(f"Connecting to REDIS {redishost!s}")
+
 
 class Option(object):
     def __init__(self, name, bias, radius):
@@ -28,7 +28,7 @@ class Option(object):
         self.bias = bias
         self.radius = radius
         
-
+""" 
 class apiComm:
     def __init__(self):
         self.redis_in= redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
@@ -52,7 +52,7 @@ class apiComm:
         else:
             return False
 
-comm = apiComm()
+comm = apiComm() """
 
 class Command:
     def __init__(self, name, command, page):
@@ -62,22 +62,23 @@ class Command:
 
     def run(self,f):
         logging.info(f"running {self.command}")
-        comm.sendUpdate(self,f)
+        #comm.sendUpdate(self,f)
         returncode = call(self.command, shell=True)  
         return returncode 
 
 
 class A_file(object):
     def __init__(self, name, token, options):
-        self.name = name
-        self.inputfile = f"{in_files_dir}/{self.name}"
+        
+        self.name = name.split('\\')[-1]
+        self.inputfile = name
         self.token = token
         self.redisKey= f"conversion.{self.name!s}"
         self.totalpages=1
         self.links = []
-        self.tempdir = f"{working_dir!s}/{token!s}"
-        self.tempdirImg= f"{self.tempdir!s}/images"
-        self.tempFile=f"{self.tempdir}/{self.name}"
+        self.tempdir = f"{working_dir!s}\\{token!s}"
+        self.tempdirImg= f"{self.tempdir!s}\\images"
+        self.tempFile=f"{self.tempdir}\\{self.name}"
         self.mimetype=""
         self.options = options
         
@@ -85,7 +86,7 @@ class A_file(object):
         
         call(f'rm -rf {self.tempdir!s}', shell=True)
 
-    def detectType(self):
+    """ def detectType(self):
         ft= magic.from_file(self.tempFile, mime=True)
         ftarray = ft.split('/')
         if len(ftarray) ==2:
@@ -94,17 +95,17 @@ class A_file(object):
             elif ftarray[1]=='pdf':
                 return "pdf"
             else:
-                return "unsupported"
+                return "unsupported" """
         
         
     def prepare(self):
         if not os.path.exists(f"{self.tempdirImg!s}"):
             os.makedirs(f"{self.tempdirImg!s}")
-        shutil.move(f"{in_files_dir}/{self.name}", self.tempFile)
-        self.mimetype = self.detectType()
+        shutil.move(f"{self.inputfile}", self.tempFile)
+        #self.mimetype = self.detectType()
 
         
-        if self.mimetype == "pdf":
+        """  if self.mimetype == "pdf":
             self.extract()
             self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
         elif self.mimetype == "image":
@@ -112,9 +113,9 @@ class A_file(object):
             self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
         else:
             logging.error('Unsupported file type')
-            return False
+            return False """
         for i in range(0,self.totalpages):
-            infile = self.tempdirImg+f"image_{i:04}.jpg"
+            infile = self.tempdirImg+f"\\image_{i:04}.jpg"
             commands=[
             Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
             Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
@@ -126,7 +127,7 @@ class A_file(object):
         while True:
             
             c = Command("Extraction des pages", \
-            f'convert -density 200 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            f'convert -density 200 "{self.tempFile}"[{i!s}] {self.tempdirImg}\\image_{i:04}.jpg',i+1)
             i=i+1
             self.totalpages=i
             returncode = c.run(self)
@@ -134,17 +135,17 @@ class A_file(object):
                 break
     def move(self):
         c = Command("Extraction des pages", \
-            f'convert -density 200 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
+            f'convert -density 200 "{self.tempFile}" {self.tempdirImg}\\image_0000.jpg',1)
         c.run(self)
 
     def preview(self,option):
-        self.convertPage(f"{self.tempdirImg}/image_0000.jpg",f"image_0000.jpg",option.radius, option.bias, 1)
+        self.convertPage(f"{self.tempdirImg}\\image_0000.jpg",f"image_0000.jpg",option.radius, option.bias, 1)
 
         return True
     def convert(self,option):
         
         for i in range(0,self.totalpages):
-            self.convertPage(f"{self.tempdirImg}/image_{i:04}.jpg",f"{self.tempdirImg}/image_{i:04}.pdf",option.radius, option.bias, i)
+            self.convertPage(f"{self.tempdirImg}\\image_{i:04}.jpg",f"{self.tempdirImg}\\image_{i:04}.pdf",option.radius, option.bias, i)
 
 
     def convertPage(self, infile, outfile,radius, bias, page):
@@ -153,12 +154,12 @@ class A_file(object):
         size = radius/3
         size=f"0x{size}"
         pid=os.getpid()
-        tmpA1=f"{self.tempdir}/autothresh1_A_{pid}.mpc"
-        tmpA2=f"{self.tempdir}/autothresh1_A_{pid}.cache"
-        tmpM1=f"{self.tempdir}/autothresh1_M_{pid}.mpc"
-        tmpM2=f"{self.tempdir}/autothresh1_M_{pid}.cache"
-        tmpT1=f"{self.tempdir}/autothresh1_T_{pid}.mpc"
-        tmpT2=f"{self.tempdir}/autothresh1_T_{pid}.cache"
+        tmpA1=f"{self.tempdir}\\autothresh1_A_{pid}.mpc"
+        tmpA2=f"{self.tempdir}\\autothresh1_A_{pid}.cache"
+        tmpM1=f"{self.tempdir}\\autothresh1_M_{pid}.mpc"
+        tmpM2=f"{self.tempdir}\\autothresh1_M_{pid}.cache"
+        tmpT1=f"{self.tempdir}\\autothresh1_T_{pid}.mpc"
+        tmpT2=f"{self.tempdir}\\autothresh1_T_{pid}.cache"
         commands = [ 
         Command("Niveau de gris", f"convert -quiet {infile} -colorspace gray -alpha off +repage {tmpA1}",page),
         Command("Négatif",f"convert {tmpA1} -negate {tmpA1}",page),
@@ -174,20 +175,20 @@ class A_file(object):
         filename=self.name.split('.')
         filename= ''.join(filename[0:-1])
         filename=f'{opt.name}_{filename}.pdf'
-        outputPdfPath=f"{files_out_dir!s}/{self.token}/{filename}"
-        if not os.path.exists(f"{files_out_dir!s}/{self.token}/"):
-            os.makedirs(f"{files_out_dir!s}/{self.token}/")
-        self.links.append(f"{self.token}/{filename}")
-        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}/image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}").run(self)
+        outputPdfPath=f"{files_out_dir!s}\\{self.token}\\{filename}"
+        if not os.path.exists(f"{files_out_dir!s}\\{self.token}\\"):
+            os.makedirs(f"{files_out_dir!s}\\{self.token}\\")
+        self.links.append(f"{self.token}\\{filename}")
+        Command('Assemblage du document', f'pdftk {self.tempdirImg!s}\\image_*.pdf cat output "{outputPdfPath}"',f"{self.totalpages}").run(self)
         
 
     
-def DetectAndRun(servicename, options):
-    message = comm.getNewMessage(servicename)
-    if message != False:
+def convert(fichier, options):
+    #message = comm.getNewMessage(servicename)
+    if fichier != False:
 
-        filename = message.get('filename')
-        token= message.get('token')
+        filename = fichier
+        token= random.randint(100000,999999)
         logging.info("Found file : " )
         logging.info(filename)
             
@@ -215,6 +216,12 @@ options.append(Option(bias=15, radius=5, name = "LIGHT"))
 options.append(Option(bias=3, radius=5, name = "MEDIUM"))
 #Convert => extraire pages si necessaire => lancer algo => reconstruire PDF
 #Output => ajout des links, cleanup
-while True:
-    time.sleep(2)
-    DetectAndRun('uploadpdf',options)
+
+parser = argparse.ArgumentParser(description='Process some integers.')
+
+parser.add_argument('fichier', metavar='c:\\chemindufichier\\fichier.pdf', type=str, nargs=1,
+                   help='chemin du fichier pdf à convertir')
+args = parser.parse_args()
+print(args)
+convert(args.fichier[0],options)
+

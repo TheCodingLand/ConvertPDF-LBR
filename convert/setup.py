@@ -2,9 +2,9 @@ from cx_Freeze import setup, Executable
 
 base = None    
 
-executables = [Executable("main-windows.py", base=base)]
+executables = [Executable("main-windows-build.py", base=base)]
 
-packages = ["idna", "math", "glob", "os", "random", "shutil", "time", "re", "fnmatch", "sys", "subprocess", "logging","redis", "magic"]
+packages = ["idna", "math", "glob", "os", "random", "shutil", "time", "re", "fnmatch", "sys", "subprocess", "logging", "argparse"]
 options = {
     'build_exe': {    
         'packages':packages,
