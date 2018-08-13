@@ -104,7 +104,7 @@ class A_file(object):
         shutil.move(f"{self.inputfile}", self.tempFile)
         #self.mimetype = self.detectType()
 
-        
+        self.extract()
         """  if self.mimetype == "pdf":
             self.extract()
             self.totalpages = len(os.listdir(f'{self.tempdirImg}'))
@@ -117,7 +117,7 @@ class A_file(object):
         for i in range(0,self.totalpages):
             infile = self.tempdirImg+f"\\image_{i:04}.jpg"
             commands=[
-            Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
+            Command("Réduis en A4", f"convert {infile} -resize 1653x2339^> {infile}",i),
             Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
         for command in commands:
             command.run(self)
