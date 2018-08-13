@@ -128,7 +128,7 @@ class A_file(object):
         while True:
             
             c = Command("Extraction des pages", \
-            f'convert -density 300 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            f'convert -density 200 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
             i=i+1
             self.totalpages=i
             returncode = c.run(self)
@@ -136,7 +136,7 @@ class A_file(object):
                 break
     def move(self):
         c = Command("Extraction des pages", \
-            f'convert -density 300 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
+            f'convert -density 200 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
         c.run(self)
 
     def preview(self,option):
@@ -167,7 +167,7 @@ class A_file(object):
         Command("Calque de flou",f"convert {tmpA1} -blur {size} {tmpM1}",page),
         Command("Calcul des niveaux adaptatif locaux",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias}% {tmpT1}",page),
         Command("Négatif",f"convert {tmpT1} -negate {infile}.gif",page),
-        Command("CCITT FAX G4",f'convert -density 300 {infile}.gif -compress group4 "{outfile}"',page),
+        Command("CCITT FAX G4",f'convert -density 200 {infile}.gif -compress group4 "{outfile}"',page),
         ]
         for command in commands:
             command.run(self)
