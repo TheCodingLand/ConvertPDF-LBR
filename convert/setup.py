@@ -4,7 +4,7 @@ base = None
 
 executables = [Executable("main-windows.py", base=base)]
 
-packages = ["idna", "math", "glob", "os", "random", "shutil", "time", "re", "fnmatch", "sys", "subprocess", "logging","redis"]
+packages = ["idna", "math", "glob", "os", "random", "shutil", "time", "re", "fnmatch", "sys", "subprocess", "logging","redis", "magic"]
 options = {
     'build_exe': {    
         'packages':packages,
