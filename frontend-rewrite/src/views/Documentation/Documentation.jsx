@@ -85,6 +85,8 @@ return (
                 </ListItem>
                 <ListItem>Un petit package foncitonnant localement sous windows est en préparation.
                 </ListItem>
+                <ListItem>Vous pouvez apporter votre soutien à ce projet en contribuant sur <a href="https://patreon.com/jlebourg" className={classes.block}>sur Patreon</a>
+                </ListItem>
                 
               </CardBody>
           

@@ -23,12 +23,13 @@ function Footer({ ...props }) {
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
-              <a href="https://www.youtube.com/channel/UCkr6-Gc3bphrKqtch6Mt1xA?view_as=subscriber" className={classes.block}>
-              <i class="fab fa-youtube fa-3x"></i>
+              <a href="https://patreon.com/jlebourg" className={classes.block}>
+              <i class="fab fa-patreon fa-3x"></i>
                 
 
               </a>
             </ListItem>
+           
             <ListItem className={classes.inlineBlock}>
               <a href="https://github.com/TheCodingLand" className={classes.block}>
               <i class="fab fa-github fa-3x"></i>
@@ -45,7 +46,8 @@ function Footer({ ...props }) {
             &copy; {1900 + new Date().getYear()}{" "}
             <a href="https://www.pdfexp.com" className={classes.a}>
               julien Le Bourg
-            </a>, PDF Conversion Platform for LBR
+            </a>, PDF Conversion Platform for LBR 
+             
           </span>
         </p>
       </div>
