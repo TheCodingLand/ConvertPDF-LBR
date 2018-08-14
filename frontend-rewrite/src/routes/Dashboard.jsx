@@ -10,7 +10,7 @@ import Help from "@material-ui/icons/Help";
 var dashboardRoutes = [
     {
       path: "/convert",
-      sidebarName: "PDF Conversion",
+      sidebarName: "Conversion",
       navbarName: "Conversion",
       icon: Dashboard,
       component: DashboardPage
