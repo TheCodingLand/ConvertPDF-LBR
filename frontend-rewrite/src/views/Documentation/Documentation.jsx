@@ -75,7 +75,7 @@ return (
                 <CardBody>
               
                 <ListItem>Ce système est expérimental</ListItem>
-                <ListItem>Ce système a été conçu pour faciliter le traitement d'une erreur commune lors du chargement d'un document pdf sur le site du Luxembourg Business Registers.
+                <ListItem>Il a été conçu pour faciliter le traitement d'une erreur commune lors du chargement d'un document pdf sur le site du Luxembourg Business Registers.
                 </ListItem>
                 <ListItem>Aucune Garantie n'est fournie concernant la qualité, la lisibilité des fichiers etc...
                 </ListItem>
