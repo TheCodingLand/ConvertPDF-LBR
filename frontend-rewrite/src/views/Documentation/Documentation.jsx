@@ -79,11 +79,13 @@ return (
                 </ListItem>
                 <ListItem>Aucune Garantie n'est fournie concernant la qualité, la lisibilité des fichiers etc...
                 </ListItem>
-                <ListItem>Ceci fonctionne sur mon budget personnel à titre d'expérience et proof of concept. Je ne peux pas en assurer un suivi ou un support particulier.
+                <ListItem>Ceci fonctionne sur le cloud, sur mon budget personnel à titre d'expérience et proof of concept. Je ne peux pas en assurer un suivi ou un support particulier.
                 </ListItem>
-                <ListItem>Travail réalisé sur mon temps personnel, n'ayant donc aucun lien direct avec le LBR.
+                <ListItem>Travail réalisé sur mon temps libre, n'ayant donc aucun lien direct avec le LBR.
                 </ListItem>
-           
+                <ListItem>Un petit package foncitonnant localement sous windows est en préparation.
+                </ListItem>
+                
               </CardBody>
           
             </Card>
@@ -101,6 +103,8 @@ return (
                 <CardBody>
                 <ListItem>Utilise le projet opensource  <a href="https://github.com/ImageMagick/ImageMagick">ImageMagick sous licence Apache 2</a></ListItem>
                 <ListItem>Code source sous <a href="https://en.wikipedia.org/wiki/MIT_LicenseMIT">Licence MIT</a>, fichiers de configuration pour la plate-forme Kubernetes</ListItem>   
+                <ListItem>Etant un proof en concept rapide, un nettoyage du code est nécessaire. Je manque de temps pour m'y coller tout de suite.</ListItem>
+
               </CardBody>
               </Card>
               </GridItem>
