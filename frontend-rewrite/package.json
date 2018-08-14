@@ -1,0 +1,27 @@
+{
+  "name": "tina-console",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^1.4.1",
+    "@material-ui/icons": "^2.0.0",
+    "chartist": "^0.11.0",
+    "history": "^4.7.2",
+    "perfect-scrollbar": "^1.4.0",
+    "react": "^16.4.1",
+    "react-chartist": "^0.13.1",
+    "react-dom": "^16.4.1",
+    "react-dropzone-component": "^3.2.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.4",
+    "socket.io": "^2.1.1",
+    "sockette": "^2.0.0",
+    "typeface-roboto": "0.0.54"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

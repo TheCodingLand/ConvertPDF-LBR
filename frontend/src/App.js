@@ -14,20 +14,11 @@ class App extends Component {
     super()
     this.gethost = () => {
       let host = window.location.host
-      // console.log(host)
-      // if (host === "localhost:3000") {
-      //   return "tina.ctg.lu" //dev env
-      // }
-      // else {
-      //   let hostpath = host.split('.')
-      //   hostpath.shift()
-      //   return hostpath.join('.')
-     
-      // }
-      //return host
+   
       return 'pdfexp.com'
       
     }
+    
 
     let SOCKET_URL = `https://uploadws.${this.gethost()}`
     
