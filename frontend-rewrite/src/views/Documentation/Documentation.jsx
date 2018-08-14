@@ -49,7 +49,7 @@ return (
                 </CardHeader>
                 <p> </p>
                 <CardBody>
-                <ListItem>Cliquez sur la zone grise ci-dessous pour selectionner un fichier.</ListItem>
+                <ListItem>Cliquez sur la zone grise pour charger un fichier.</ListItem>
                 <ListItem>Une fois chargé, le processus de conversion débute.</ListItem>      
                 <ListItem>Des liens seront affichés pour télécharger les documents</ListItem>
                 <ListItem>Il y a 3 qualités de contraste fournis, ce qui permet de contourner certains problèmes avec des documents trop clairs ou trop sombres</ListItem>
