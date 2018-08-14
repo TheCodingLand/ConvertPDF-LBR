@@ -6,7 +6,7 @@ import Provider from 'components/Context/Provider'
 import "assets/css/ctg-ai-lab.css?v=1.4.0";
 import Context from 'components/Context/Context'
 import indexRoutes from "routes/index.jsx";
-import Footer from 'components/Footer/Footer'
+
 const hist = createBrowserHistory();
 
 
