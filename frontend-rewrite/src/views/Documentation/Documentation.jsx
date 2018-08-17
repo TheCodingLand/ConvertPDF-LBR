@@ -28,12 +28,21 @@ import LineGraph from "components/Graphs/LineGraph"
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
-
+import Context from 'components/Context/Context.jsx'
 
 import dashboardStyle from "assets/jss/ctg-ai-lab/views/dashboardStyle.jsx";
 
 class Dashboard extends React.Component {
+    constructor(){
+      super()
+      this.state = {
+        
+      }
+  
+    }
+    
     render() {
+
         const { classes } = this.props;
 return (
 <div>
@@ -110,15 +119,33 @@ return (
               </GridItem>
         
           
-         
-         
-
+              <GridItem xs={12} sm={12} md={6} style={{flexGrow: 1,}}>
+            <Card style={{  display: 'flex',flexDirection: 'column', flex:1, minHeight:"91%"}}>
+              <CardHeader color="success" stats icon>
+                <CardIcon color="primary">
+                  <Icon>description</Icon>
+                </CardIcon>
+                <h2 className={classes.cardTitle}>Statistiques d'utilisation</h2>
+                </CardHeader>
+                <p> </p>
+                <CardBody>
+                <Context.Consumer>{ context => 
+                    <p> {context.stats ? context.stats : ""}
+                    </p>}
+                    </Context.Consumer>
+              </CardBody>
+              </Card>
+              </GridItem>
 
      
 
+     
+     
 
           </GridContainer>
 
+          
+  
 
 
 
