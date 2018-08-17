@@ -41,7 +41,12 @@ io.on('connection', function (socket) {
     //socket.send('message', { test: 'be received by client' });
 
     socket.on('message', function (from, msg) {
-      console.log('I received a private message by ', from);
+      if (msg ==='getstats') { 
+        redisclient.keys('*', (err,keys) => {
+        socket.send({data:keys.lenght.toString()})
+      }
+   
+  )}
       })
       
     socket.on('disconnect', function () {
