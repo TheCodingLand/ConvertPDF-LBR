@@ -40,7 +40,7 @@ io.on('connection', function (socket) {
     
     //socket.send('message', { test: 'be received by client' });
 
-    socket.on('message', function (from, msg) {
+    socket.on('getstats', function (from, msg) {
       console.log("recieved" , msg)
       if (msg ==='getstats') { 
         redisclient.keys('*', (err,keys) => {
