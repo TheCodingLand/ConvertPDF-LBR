@@ -45,9 +45,8 @@ io.on('connection', function (socket) {
         redisclient.keys('*', (err,keys) => {
         socket.send({data:keys.lenght.toString()})
       }
-   
   )}
-      })
+  })
       
     socket.on('disconnect', function () {
       //io.emit('user disconnected');
