@@ -84,7 +84,7 @@ return (
                 <ListItem>Travail réalisé sur mon temps libre, n'ayant donc aucun lien direct avec le LBR.
                 </ListItem>
                 <ListItem>Un petit package foncitonnant localement sous windows est en préparation.
-                
+                </ListItem>
                 
               </CardBody>
           
