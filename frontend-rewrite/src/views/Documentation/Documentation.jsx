@@ -129,10 +129,11 @@ return (
                 </CardHeader>
                 <p> </p>
                 <CardBody>
+                  <Typography> Nombre de documents convertis : (depuis le 17/8/2018)
                 <Context.Consumer>{ context => 
                     <p> {context.stats ? context.stats : ""}
                     </p>}
-                    </Context.Consumer>
+                    </Context.Consumer></Typography>
               </CardBody>
               </Card>
               </GridItem>
