@@ -41,13 +41,14 @@ io.on('connection', function (socket) {
     //socket.send('message', { test: 'be received by client' });
 
     socket.on('getstats', function (from, msg) {
-      console.log("recieved" , msg)
-      if (msg ==='getstats') { 
+      console.log("recieved getstats")
+      
         redisclient.keys('*', (err,keys) => {
-        socket.send({data:keys.lenght.toString()})
-      }
-  )}
-  })
+        socket.broadcast.to(from).emit('getstats',JSON.stringify({data:keys.length}))
+        
+      
+        })
+      })
       
     socket.on('disconnect', function () {
       //io.emit('user disconnected');
