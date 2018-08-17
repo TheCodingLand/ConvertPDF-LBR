@@ -44,7 +44,8 @@ io.on('connection', function (socket) {
       console.log("recieved getstats")
       
         redisclient.keys('*', (err,keys) => {
-        socket.broadcast.to(from).emit('getstats',JSON.stringify({data:keys.length}))
+        console.log('answering to ', from)
+        socket.emit('getstats',JSON.stringify({data:keys.length}))
         
       
         })
