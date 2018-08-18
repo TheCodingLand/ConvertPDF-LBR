@@ -117,7 +117,7 @@ class A_file(object):
             logging.error('Unsupported file type')
             return False
         for i in range(0,self.totalpages):
-            infile = self.tempdirImg+f"image_{i:04}.jpg"
+            infile = self.tempdirImg+f"/image_{i:04}.jpg"
             commands=[
             Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
             Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
