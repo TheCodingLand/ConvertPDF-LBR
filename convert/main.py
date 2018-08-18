@@ -121,8 +121,8 @@ class A_file(object):
             commands=[
             Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
             Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
-        for command in commands:
-            command.run(self)
+            for command in commands:
+                command.run(self)
 
     def extract(self):
         i=0
