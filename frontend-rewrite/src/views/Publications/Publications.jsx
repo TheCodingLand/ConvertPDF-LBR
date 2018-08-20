@@ -32,21 +32,37 @@ class TextFields extends React.Component {
       fjur: '',
       address: '',
       liquidation: false,
-      token: '',
       text:'',
       
     };
-    submit = (context) => { console.log(context)
+    setToken = () => {
+    let s = Date.now();
+    s = s.toString()
+    s = s + this.state.name
+    let token = btoa(s)
+    if (token.length<25){
+      token = token.slice(8,19)
+      } else{
+      token = token.slice(8,24)
+    }
+      
+      this.setState({token:token})
+    }
+    submit = (context) => { 
       let s = Date.now();
       s = s.toString()
       s = s + this.state.name
       let token = btoa(s)
-        if (token.length<25){
+      if (token.length<25){
         token = token.slice(8,19)
-    }   else{token = token.slice(8,24)}
-        this.setState({token:token})
-    
-    context.sendObj('publication', this.state)
+        } else{
+        token = token.slice(8,24)
+      }
+        
+    console.log(context)
+    let obj = { ...this.state, token:token}
+    console.log(obj)
+    context.sendObj('publication', obj)
     }
 
     handleChange = name => event => {

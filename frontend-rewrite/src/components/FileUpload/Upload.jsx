@@ -55,6 +55,7 @@ class Upload extends Component {
         }
         let posturl= 'https://uploadpdf.'+this.props.host+'/uploadHandler'
         if (this.props.host === 'tina.ctg.lu') {posturl= 'http://uploadpdf.'+this.props.host+'/uploadHandler'}
+        if (this.props.host ==='localhost') {posturl= 'http://uploadpdf.'+this.props.host+'/uploadHandler'}
         this.componentConfig = {
             iconFiletypes: ['.jpg', '.pdf'],
             showFiletypeIcon: true,
