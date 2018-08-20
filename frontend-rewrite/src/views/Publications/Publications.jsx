@@ -7,6 +7,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from 'components/CustomButtons/Button.jsx'
 import Context from 'components/Context/Context.jsx'
+import { Paper } from '@material-ui/core';
 
 const styles = theme => ({
     container: {
@@ -17,6 +18,12 @@ const styles = theme => ({
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
       width: 200,
+    },
+    textArea: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: '100%',
+      rows:15
     },
     menu: {
       width: 200,
@@ -111,17 +118,18 @@ class TextFields extends React.Component {
           onChange={this.handleChange('fjur')}
           margin="normal"
         />
-      
+      <Paper className={classes.textArea}>
         <TextField
           id="text"
           label="Texte"
           multiline
           rowsMax=""
+          rows={20}
           value={this.state.text}
           onChange={this.handleChange('text')}
-          className={classes.textField}
+          className={classes.textArea}
           margin="normal"
-        />
+        /></Paper>
         <FormControlLabel
           control={
             <Checkbox
