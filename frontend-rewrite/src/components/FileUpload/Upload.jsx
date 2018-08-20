@@ -32,6 +32,7 @@ class Upload extends Component {
             message:"Cliquez sur la zone grise pour charger un fichier",
             visible: 'true'
         }
+
         // For a full list of possible configurations,
         // please consult http://www.dropzonejs.com/#configuration
         this.djsConfig = {
@@ -52,11 +53,12 @@ class Upload extends Component {
                 </div>
               ) */
         }
-
+        let posturl= 'https://uploadpdf.'+this.props.host+'/uploadHandler'
+        if (this.props.host === 'tina.ctg.lu') {posturl= 'http://uploadpdf.'+this.props.host+'/uploadHandler'}
         this.componentConfig = {
             iconFiletypes: ['.jpg', '.pdf'],
             showFiletypeIcon: true,
-            postUrl: 'https://uploadpdf.'+this.props.host+'/uploadHandler'
+            postUrl: posturl
         }
 
         
