@@ -56,7 +56,7 @@ gotStats = (message) => {
 
   sendObj = (channel,obj) => {
     console.log('sending data' , channel, obj)
-    this.state.socket.emit(channel, obj)
+    this.state.socket.emit(channel, JSON.stringify(obj))
 
   }
 

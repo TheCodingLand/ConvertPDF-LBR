@@ -37,6 +37,15 @@ class TextFields extends React.Component {
       
     };
     submit = (context) => { console.log(context)
+      let s = Date.now();
+      s = s.toString()
+      s = s + this.state.name
+      let token = btoa(s)
+        if (token.length<25){
+        token = token.slice(8,19)
+    }   else{token = token.slice(8,24)}
+        this.setState({token:token})
+    
     context.sendObj('publication', this.state)
     }
 
