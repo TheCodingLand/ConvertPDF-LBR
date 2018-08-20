@@ -223,6 +223,9 @@ def Publications():
         token = message.get('token')
         pdf = BasicPubPdf(rcs,name,fjur,address,liquidation,text)
         pdf.generateBody()
+        if not os.path.exists(f"{files_out_dir}/{token}"):
+            os.makedirs(f"{files_out_dir}/{token}")
+        
         pdf.save(f"{files_out_dir}/{token}/publication_{rcs}.pdf")
         links = []
         links.append(f"{token}/publication_{rcs}.pdf")
