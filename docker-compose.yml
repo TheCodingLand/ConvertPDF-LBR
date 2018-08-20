@@ -116,7 +116,7 @@ services:
     command: sh -c 'node ./src/index.js'
 
   frontend:
-    build: ./frontend/
+    build: ./frontend-rewrite/
     labels:
         - "traefik.backend=frontend"
         - "traefik.docker.network=ai-web"
