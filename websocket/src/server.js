@@ -9,7 +9,11 @@ var host = "redis://" + redis_host + ":6379";
 var redisclient = redis.createClient(host);
 redisclient.select(5);
 
-var redis_sub = redis.createClient(host)
+
+
+
+
+
 console.log("v0.03")
 
 
@@ -63,13 +67,26 @@ io.on('connection', function (socket) {
           console.log(result)
           socket.emit( 'message' , JSON.stringify(result) )
         }) //stored key is the same name as the channel
-        
-        
         })
-          
-        
-          
         })
+
+
+      
+        socket.on('publication', function (msg, from) {
+          console.log("recieved publication")
+          let o = JSON.parse(msg)
+          let redis_sub = redis.createClient(host)
+          redis_sub.psubscribe(`publication.${o.token}`)
+          redis_sub.on("pmessage", function(channel, message) { 
+            redisclient.hgetall(message, function(err,result) {
+            console.log(result)
+            socket.emit( 'message' , JSON.stringify(result) )
+          }) //stored key is the same name as the channel
+          })
+          let redisout = redis.createClient(host);
+          redisout.select(2);
+          redis_out.hmset('publication.'+o.token, o)
+          })
       
     socket.on('disconnect', function () {
       //io.emit('user disconnected');
