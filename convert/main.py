@@ -21,7 +21,9 @@ os.environ['MAGICK_FILES_LIMIT']="1024MB"
 in_files_dir = "/data"
 files_out_dir = "/data/converted"
 working_dir = "/usr/src/app"
-
+density = 300
+pixels_X = int(8.265*density)
+pixels_Y = int(11.695*density)
 #logging.info(f"Connecting to REDIS {redishost!s}")
 
 class Option(object):
@@ -33,7 +35,7 @@ class Option(object):
 
 class apiComm:
     def __init__(self):
-        self.redis_in= redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
+        self.redis_in = redis.StrictRedis(host=redishost,decode_responses=True, port=6379, db=2)
         self.redis_out = redis.StrictRedis(host=redishost, port=6379, db=5)
         self.redis_pub = redis.StrictRedis(host=redishost, port=6379)
 
@@ -119,8 +121,8 @@ class A_file(object):
         for i in range(0,self.totalpages):
             infile = self.tempdirImg+f"image_{i:04}.jpg"
             commands=[
-            Command("Réduis en A4", f"convert {infile} -resize 1653x2339\\> {infile}",i),
-            Command("Etendre en A4", f"convert {infile} -gravity center -extent 1653x2339 {infile}",i),]
+            Command("Réduis en A4", f"convert {infile} -resize {pixels_X!s}x{pixels_Y!s}\\> {infile}",i),
+            Command("Etendre en A4", f"convert {infile} -gravity center -extent {pixels_X!s}x{pixels_Y!s} {infile}",i),]
         for command in commands:
             command.run(self)
 
@@ -129,7 +131,7 @@ class A_file(object):
         while True:
             
             c = Command("Extraction des pages", \
-            f'convert -density 300 "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
+            f'convert -density {density} "{self.tempFile}"[{i!s}] {self.tempdirImg}/image_{i:04}.jpg',i+1)
             i=i+1
             self.totalpages=i
             returncode = c.run(self)
@@ -137,7 +139,7 @@ class A_file(object):
                 break
     def move(self):
         c = Command("Extraction des pages", \
-            f'convert -density 300 "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
+            f'convert -density {density} "{self.tempFile}" {self.tempdirImg}/image_0000.jpg',1)
         c.run(self)
 
     def preview(self,option):
@@ -168,7 +170,7 @@ class A_file(object):
         Command("Calque de flou",f"convert {tmpA1} -blur {size} {tmpM1}",page),
         Command("Calcul des niveaux adaptatif locaux",f"convert {tmpA1} {tmpM1} +swap -compose minus -composite -threshold {bias}% {tmpT1}",page),
         Command("Négatif",f"convert {tmpT1} -negate {infile}.gif",page),
-        Command("CCITT FAX G4",f'convert -density 300 {infile}.gif -compress group4 "{outfile}"',page),
+        Command("CCITT FAX G4",f'convert -density {density!s} {infile}.gif -compress group4 "{outfile}"',page),
         ]
         for command in commands:
             command.run(self)
