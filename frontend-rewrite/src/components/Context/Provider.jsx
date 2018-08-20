@@ -9,8 +9,13 @@ constructor() {
   super();
     this.gethost = () => {
       let host = window.location.host
-   //will do this later
+      if (host!== 'convert.tina.ctg.lu') {
       return 'pdfexp.com'
+    }
+      else
+      {
+        return 'tina.ctg.lu'
+      }
       
     }
     
