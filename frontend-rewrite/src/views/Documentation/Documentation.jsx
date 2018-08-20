@@ -129,26 +129,17 @@ return (
                 </CardHeader>
                 <p> </p>
                 <CardBody>
-                  <Typography> Nombre de documents convertis : (depuis le 17/8/2018)
+                  <Typography> Nombre de documents convertis : (depuis le 17/8/2018) </Typography>
                 <Context.Consumer>{ context => 
-                    <p> {context.stats ? context.stats : ""}
-                    </p>}
-                    </Context.Consumer></Typography>
+                    <p> {context.stats ? context.stats : ""}</p>
+                    }
+                    </Context.Consumer>
               </CardBody>
               </Card>
               </GridItem>
 
      
-
-     
-     
-
           </GridContainer>
-
-          
-  
-
-
 
 
 </div>)
