@@ -107,10 +107,10 @@ class Upload extends Component {
             if (o.links) {
                 
                 
-                let links = o.links.replace(/\['/g, "[\"")
+                let links = o.links.replace(/\['/g, '["')
                
                 links = links.replace(/\'\]/g, '"]')
-                links = links.replace(/', '/g, "\", \"")
+                links = links.replace(/', '/g, '", "')
                 
                 console.log('links :',links)
                 o.links = JSON.parse(links)
