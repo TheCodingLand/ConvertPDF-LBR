@@ -6,7 +6,7 @@ from subprocess import call
 import logging
 import redis
 import sys
-
+from publication import BasicPubPdf
 logging.basicConfig(level=logging.DEBUG)
 
 redishost =os.environ.get('REDIS_HOST')
@@ -45,6 +45,9 @@ class apiComm:
         #self.redis_out.expire(f.redisKey, 60)
         
         #logging.info(command.command)
+    def sendPubUpdate(self, token, links):
+        self.redis_out.hmset(f"publication.{token}",{ "links" : links })
+        self.redis_pub.publish(f"publication.{token}", f"publication.{token}")
 
     def getNewMessage(self, service):
         keys = self.redis_in.keys(f'{service}.*')
@@ -208,6 +211,24 @@ def DetectAndRun(servicename, options):
             
         inputfile.cleanup()
 
+def Publications():
+    message = comm.getNewMessage('publication')
+    if message != False:
+        rcs = message.get('rcs')
+        name = message.get('name')
+        fjur= message.get('fjur')
+        address = message.get('address')
+        liquidation = message.get('liquidation')
+        text= message.get('text')
+        token = message.get('token')
+        pdf = BasicPubPdf(rcs,name,fjur,address,liquidation,text)
+        pdf.generateBody()
+        pdf.save(f"{files_out_dir}/{token}/publication_{rcs}.pdf")
+        links = []
+        links.append(f"{token}/publication_{rcs}.pdf")
+        comm.sendPubUpdate(token, links)
+
+
 
 #Upload => valider mimetype => extraire page 1
 #Preview => prendre parametre bias et radius => convertir page 1
@@ -223,3 +244,4 @@ options.append(Option(bias=3, radius=5, name = "MEDIUM"))
 while True:
     time.sleep(2)
     DetectAndRun('uploadpdf',options)
+    Publications()
