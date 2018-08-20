@@ -80,7 +80,7 @@ io.on('connection', function (socket) {
           redis_sub.on("pmessage", function(channel, message) { 
             redisclient.hgetall(message, function(err,result) {
             console.log(result)
-            socket.emit( 'message' , JSON.stringify(result) )
+            socket.emit( 'pub' , JSON.stringify(result) )
           }) //stored key is the same name as the channel
           })
           let redisout = redis.createClient(host);

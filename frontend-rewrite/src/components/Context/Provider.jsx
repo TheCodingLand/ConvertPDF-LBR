@@ -30,16 +30,25 @@ constructor() {
       connected:false,
       host:this.gethost(),
       stats: 0,
-      sendObj: this.sendObj
+      sendObj: this.sendObj,
+      publink : ''
     }
 
-  
+    this.state.socket.on('pub', this.gotPub)
     this.state.socket.on('connect', this.setConnected)  
     this.state.socket.on('disconnect',this.setDisconnected)  
     this.state.socket.on('getstats', this.gotStats)
     
   }
-  
+  gotPub = (message) => {
+    console.log(message)
+    let o = JSON.parse(message)
+    console.log(o)
+    if (o.links.length > 0) {
+      this.setState({publink:o.links[0]})
+    }
+
+  } 
  
            
       

@@ -133,8 +133,13 @@ class TextFields extends React.Component {
           label="En liquidation volontaire ?"
         />
         <Context.Consumer>{context =>
+        <div>
                <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>   
-                }
+                
+                {context.publink ? <a href={context.publink}>result</a>:"" }
+              </div>  
+              }
+                
                 </Context.Consumer>
         
         </form>
