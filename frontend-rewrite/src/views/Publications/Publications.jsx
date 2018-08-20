@@ -19,11 +19,16 @@ const styles = theme => ({
       marginRight: theme.spacing.unit,
       width: 200,
     },
+    
     textArea: {
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
-      width: '100%',
-      rows:15
+      width: '99%'
+    },
+    textAreaPaper: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: '100%'
     },
     menu: {
       width: 200,
@@ -118,13 +123,13 @@ class TextFields extends React.Component {
           onChange={this.handleChange('fjur')}
           margin="normal"
         />
-      <Paper className={classes.textArea}>
+      <Paper className={classes.textAreaPaper}>
         <TextField
           id="text"
           label="Texte"
           multiline
           rowsMax=""
-          rows={10}
+          rows={12}
           value={this.state.text}
           onChange={this.handleChange('text')}
           className={classes.textArea}
