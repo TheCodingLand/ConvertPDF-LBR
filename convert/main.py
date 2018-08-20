@@ -219,7 +219,11 @@ def Publications():
         fjur= message.get('fjur')
         address = message.get('address')
         liquidation = message.get('liquidation')
-        logging.warning(liquidation)
+        if liquidation == 'false':
+            liquidation=False
+        else:
+            liquidation=True
+            
         text= message.get('text')
         token = message.get('token')
         pdf = BasicPubPdf(rcs,name,fjur,address,liquidation,text)
