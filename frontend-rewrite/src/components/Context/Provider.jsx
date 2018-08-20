@@ -44,6 +44,15 @@ constructor() {
     console.log(message)
     let o = JSON.parse(message)
     console.log(o)
+
+    let links = o.links.replace(/\['/g, '["')
+               
+    links = links.replace(/\'\]/g, '"]')
+    links = links.replace(/', '/g, '", "')
+                
+    o.links = JSON.parse(links)
+
+
     if (o.links.length > 0) {
       
       this.setState({publink:JSON.parse(o.links)[0]})
