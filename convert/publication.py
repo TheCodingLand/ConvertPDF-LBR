@@ -17,6 +17,7 @@ class BasicPubPdf(object):
         # Supports more than 200 languages. For a coverage status see:
         # http://dejavu.svn.sourceforge.net/viewvc/dejavu/trunk/dejavu-fonts/langcover.txt
         self.pdf.add_font('Calibri', '', 'Calibri.ttf', uni=True)
+        self.pdf.add_font('Calibri', 'B', 'Calibrib.ttf', uni=True)
         self.pdf.set_font('Calibri', '', 12)
 
         self.text=text
