@@ -124,7 +124,7 @@ class TextFields extends React.Component {
           label="Texte"
           multiline
           rowsMax=""
-          rows={20}
+          rows={10}
           value={this.state.text}
           onChange={this.handleChange('text')}
           className={classes.textArea}
