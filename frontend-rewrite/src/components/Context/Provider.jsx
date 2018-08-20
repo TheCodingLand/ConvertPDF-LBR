@@ -27,10 +27,11 @@ constructor() {
     
     this.state = {
       socket: socket,
+      loading:false,
       connected:false,
       host:this.gethost(),
       stats: 0,
-      sendObj: this.sendObj,
+      sendPub: this.sendPub,
       publink : ''
     }
 
@@ -55,7 +56,7 @@ constructor() {
 
     if (o.links.length > 0) {
       
-      this.setState({publink:o.links[0]})
+      this.setState({publink:o.links[0], loading:false})
     }
 
   } 
@@ -64,6 +65,7 @@ constructor() {
       
 
 gotStats = (message) => {
+    
     console.log(message)
     let o = JSON.parse(message)
     if (o.data){
@@ -73,7 +75,8 @@ gotStats = (message) => {
     }
   }
 
-  sendObj = (channel,obj) => {
+  sendPub = (channel,obj) => {
+    this.setState({publink:false, loading:true})
     console.log('sending data' , channel, obj)
     this.state.socket.emit(channel, JSON.stringify(obj))
 

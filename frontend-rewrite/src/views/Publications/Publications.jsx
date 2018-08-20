@@ -26,6 +26,12 @@ const styles = theme => ({
       marginRight: theme.spacing.unit,
       width: '99%'
     },
+    
+      progress: {
+        margin: theme.spacing.unit,
+      },
+        
+    
     textAreaPaper: {
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
@@ -51,8 +57,8 @@ class TextFields extends React.Component {
     };
     
     submit = (context) => {
-      this.setState({loading:true})
-      context.linkpub="" 
+      
+
       let s = Date.now();
       s = s.toString()
       s = s + this.state.name
@@ -67,7 +73,7 @@ class TextFields extends React.Component {
     
     let obj = { ...this.state, token:token}
     console.log(obj)
-    context.sendObj('publication', obj)
+    context.sendPub('publication', obj)
     }
 
     handleChange = name => event => {
@@ -140,9 +146,9 @@ class TextFields extends React.Component {
         />
         <Context.Consumer>{context =>
         <div>
-               <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>   
-               {this.state.loading === true ? <CircularProgress /> : "" }
-                {context.publink ? <Button onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank"); this.setState({loading:false}) }}>Voir Resultat</Button> :"" }
+               <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>
+               {context.loading === true ? <CircularProgress className={classes.progress}/> : "" }
+                {context.publink ? <Button onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank") }}>Voir Resultat</Button> :"" }
               </div>  
               }
                 
