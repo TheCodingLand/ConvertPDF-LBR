@@ -26,6 +26,12 @@ const styles = theme => ({
       marginRight: theme.spacing.unit,
       width: '99%'
     },
+    checkBox: {
+      marginTop: theme.spacing.unit*0,
+    },
+    checkBoxLabel: {
+      marginTop: theme.spacing.unit*3,
+    },
     
       progress: {
         margin: theme.spacing.unit,
@@ -125,12 +131,15 @@ class TextFields extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
+            className={classes.checkBox}
+          
               checked={this.state.liquidation}
               onChange={this.handleChangeChecked('liquidation')}
               value="liquidation"
             />
           }
           label="En liquidation volontaire ?"
+          className={classes.checkBoxLabel}
         />
       <Paper className={classes.textAreaPaper}>
         <TextField
