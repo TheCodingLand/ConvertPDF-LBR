@@ -4,7 +4,7 @@ import Documentation from "views/Documentation/Documentation.jsx";
 import Publications from "views/Publications/Publications.jsx";
 import Help from "@material-ui/icons/Help";
 
-
+import Book from "@material-ui/icons/Book"
 
 
 //var pages = [].concat(pagesRoutes);
@@ -28,7 +28,7 @@ var dashboardRoutes = [
       path: "/publications",
       sidebarName: "Publications",
       navbarName: "Publications",
-      icon: Help,
+      icon: Book,
       component: Publications
     },
       { redirect: true, path: "/", to:'/convert', navbarName: "Redirect" }
