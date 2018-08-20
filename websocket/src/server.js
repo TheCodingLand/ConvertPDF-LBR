@@ -50,11 +50,11 @@ io.on('connection', function (socket) {
       })
     
 
-      socket.on('filestatus', function (from, msg) {
+      socket.on('filestatus', function (msg, from) {
         console.log("recieved filestatus")
         
           
-          console.log('answering to ', from)
+          console.log('answering to ', msg)
           console.log(msg)
           let redis_sub = redis.createClient(host)
           redis_sub.psubscribe(`conversion.${msg}`)
