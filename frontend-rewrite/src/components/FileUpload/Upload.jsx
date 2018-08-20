@@ -67,7 +67,7 @@ class Upload extends Component {
         // Simple callbacks work too, of course
         this.success = file => { console.log('uploaded', file) 
         this.setState({conversion:"started",filename:file.name, uploading:false})
-        //this.props.socket.send("message", file.name ) 
+        this.props.socket.send("filestatus", file.name ) 
 
         this.removedfile(file)   
     }

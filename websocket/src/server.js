@@ -13,14 +13,12 @@ var redis_sub = redis.createClient(host)
 console.log("v0.03")
 
 
+
+/* 
 redis_sub.psubscribe('conversion.*')
 
 
-let previousConversions = redisclient.get('conversion.*')
-console.log(previousConversions)
 
-
-//SOCKETIO
 redis_sub.on("pmessage", function (channel, message) {
   console.log("pdf :" + channel)
   console.log(message)
@@ -30,10 +28,9 @@ redis_sub.on("pmessage", function (channel, message) {
   redisclient.hgetall(message, function(err,result) {
     console.log(result)
     io.emit( 'message' , JSON.stringify(result) )
-  }) //stored key is the same name as the channel
-  
-  
-})
+  }) 
+}) */
+
 
 
 io.on('connection', function (socket) {
@@ -51,6 +48,27 @@ io.on('connection', function (socket) {
       
         })
       })
+    
+
+      socket.on('filestatus', function (from, msg) {
+        console.log("recieved getstats")
+        
+          redisclient.keys('*', (err,keys) => {
+          console.log('answering to ', from)
+          console.log(msg)
+          let redis_sub = redis.createClient(host)
+          redis_sub.psubscribe(`conversion.${msg}.*`)
+          redis_sub.on("pmessage", function() {  redisclient.hgetall(message, function(err,result) {
+            console.log(result)
+            socket.emit( 'message' , JSON.stringify(result) )
+          }) //stored key is the same name as the channel
+          
+          
+        })
+          
+        
+          })
+        })
       
     socket.on('disconnect', function () {
       //io.emit('user disconnected');
