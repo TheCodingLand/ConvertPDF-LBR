@@ -50,14 +50,14 @@ io.on('connection', function (socket) {
       })
     
 
-      socket.on('filestatus', function (msg, from) {
+      socket.on('filestatus', function (filename, from) {
         console.log("recieved filestatus")
         
           
-        console.log('answering to ', msg)
-        console.log(msg)
+        console.log('answering to ', filename)
+        console.log(filename)
         let redis_sub = redis.createClient(host)
-        redis_sub.psubscribe(`conversion.${msg}`)
+        redis_sub.psubscribe(`conversion.${filename}`)
         redis_sub.on("pmessage", function(channel, message) { 
           redisclient.hgetall(message, function(err,result) {
           console.log(result)
