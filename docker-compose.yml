@@ -97,6 +97,7 @@ services:
   uploadpdf:
     environment:
       - DESTINATION=/data
+      - REDIS_HOST=${REDIS_HOST}
     build: ./upload/
     labels:
         - "traefik.backend=uploadpdf"
