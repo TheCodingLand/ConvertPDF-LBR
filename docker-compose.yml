@@ -121,7 +121,7 @@ services:
         - "traefik.backend=frontend"
         - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
-        - "traefik.port=8080"
+        - "traefik.port=80"
         - "traefik.frontend.rule=Host:convert.${D_HOST}"
         - "traefik.frontend.entryPoints=http"
     expose:
