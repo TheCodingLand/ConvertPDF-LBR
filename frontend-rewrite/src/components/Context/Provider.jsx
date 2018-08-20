@@ -46,7 +46,7 @@ constructor() {
     console.log(o)
     if (o.links.length > 0) {
       
-      this.setState({publink:o.links[0]})
+      this.setState({publink:JSON.parse(o.links)[0]})
     }
 
   } 
