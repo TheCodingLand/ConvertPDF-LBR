@@ -18,9 +18,10 @@ constructor() {
       }
       
     }
-    
-
     let SOCKET_URL = `https://uploadws.${this.gethost()}`
+    if (this.gethost()==='tina.ctg.lu'){
+      SOCKET_URL = `http://uploadws.${this.gethost()}`
+    }
     
     let socket = io.connect(SOCKET_URL)
     this.state = {
