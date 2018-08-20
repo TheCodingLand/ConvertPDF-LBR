@@ -122,6 +122,16 @@ class TextFields extends React.Component {
           onChange={this.handleChange('fjur')}
           margin="normal"
         />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={this.state.liquidation}
+              onChange={this.handleChangeChecked('liquidation')}
+              value="liquidation"
+            />
+          }
+          label="En liquidation volontaire ?"
+        />
       <Paper className={classes.textAreaPaper}>
         <TextField
           id="text"
@@ -134,16 +144,7 @@ class TextFields extends React.Component {
           className={classes.textArea}
           margin="normal"
         /></Paper>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={this.state.liquidation}
-              onChange={this.handleChangeChecked('liquidation')}
-              value="liquidation"
-            />
-          }
-          label="En liquidation volontaire ?"
-        />
+        
         <Context.Consumer>{context =>
         <div>
                <Button color='primary' onClick={()=>this.submit(context)}>Génerer PDF</Button>
