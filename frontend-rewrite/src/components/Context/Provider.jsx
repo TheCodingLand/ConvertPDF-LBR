@@ -45,6 +45,7 @@ constructor() {
     let o = JSON.parse(message)
     console.log(o)
     if (o.links.length > 0) {
+      
       this.setState({publink:o.links[0]})
     }
 

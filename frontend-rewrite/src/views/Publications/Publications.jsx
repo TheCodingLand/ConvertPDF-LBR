@@ -136,7 +136,7 @@ class TextFields extends React.Component {
         <div>
                <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>   
                 
-                {context.publink ? <a href={context.publink}>result</a>:"" }
+                {context.publink ? <Button onClick={()=> window.open('http://converted.'+ context.host +'/' +context.publink, "_blank")}>Voir Resultat</Button>:"" }
               </div>  
               }
                 
