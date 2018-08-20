@@ -15,7 +15,8 @@ class App extends Component {
     this.gethost = () => {
       let host = window.location.host
       if (host!== 'convert.tina.ctg.lu') {
-      return 'pdfexp.com'}
+      return 'pdfexp.com'
+    }
       else
       {
         return 'tina.ctg.lu'
