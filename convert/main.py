@@ -119,12 +119,12 @@ class A_file(object):
             logging.error('Unsupported file type')
             return False
         for i in range(0,self.totalpages):
-            infile = self.tempdirImg+f"image_{i:04}.jpg"
+            infile = self.tempdirImg+f"/image_{i:04}.jpg"
             commands=[
             Command("Réduis en A4", f"convert {infile} -resize {pixels_X!s}x{pixels_Y!s}\\> {infile}",i),
             Command("Etendre en A4", f"convert {infile} -gravity center -extent {pixels_X!s}x{pixels_Y!s} {infile}",i),]
-        for command in commands:
-            command.run(self)
+            for command in commands:
+                command.run(self)
 
     def extract(self):
         i=0
