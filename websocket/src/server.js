@@ -85,7 +85,7 @@ io.on('connection', function (socket) {
           })
           let redisout = redis.createClient(host);
           redisout.select(2);
-          redis_out.hmset('publication.'+o.token, o)
+          redisout.hmset('publication.'+o.token, o)
           })
       
     socket.on('disconnect', function () {
