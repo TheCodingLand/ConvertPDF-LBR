@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from 'components/CustomButtons/Button.jsx'
 import Context from 'components/Context/Context.jsx'
 import { Paper } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const styles = theme => ({
     container: {
@@ -45,22 +46,13 @@ class TextFields extends React.Component {
       address: '',
       liquidation: false,
       text:'',
+      loading:false
       
     };
-    setToken = () => {
-    let s = Date.now();
-    s = s.toString()
-    s = s + this.state.name
-    let token = btoa(s)
-    if (token.length<25){
-      token = token.slice(8,19)
-      } else{
-      token = token.slice(8,24)
-    }
-      
-      this.setState({token:token})
-    }
-    submit = (context) => { 
+    
+    submit = (context) => {
+      this.setState({loading:true})
+      context.linkpub="" 
       let s = Date.now();
       s = s.toString()
       s = s + this.state.name
@@ -72,6 +64,7 @@ class TextFields extends React.Component {
       }
         
     console.log(context)
+    
     let obj = { ...this.state, token:token}
     console.log(obj)
     context.sendObj('publication', obj)
@@ -148,8 +141,8 @@ class TextFields extends React.Component {
         <Context.Consumer>{context =>
         <div>
                <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>   
-                
-                {context.publink ? <Button onClick={()=> window.open('http://converted.'+ context.host +'/' +context.publink, "_blank")}>Voir Resultat</Button>:"" }
+               {this.state.loading === true ? <CircularProgress /> : "" }
+                {context.publink ? <Button onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank"); this.setState({loading:false}) }}>Voir Resultat</Button> :"" }
               </div>  
               }
                 
