@@ -51,13 +51,13 @@ io.on('connection', function (socket) {
     
 
       socket.on('filestatus', function (from, msg) {
-        console.log("recieved getstats")
+        console.log("recieved filestatus")
         
-          redisclient.keys('*', (err,keys) => {
+          
           console.log('answering to ', from)
           console.log(msg)
           let redis_sub = redis.createClient(host)
-          redis_sub.psubscribe(`conversion.${msg}.*`)
+          redis_sub.psubscribe(`conversion.${msg}`)
           redis_sub.on("pmessage", function() {  redisclient.hgetall(message, function(err,result) {
             console.log(result)
             socket.emit( 'message' , JSON.stringify(result) )
@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
         })
           
         
-          })
+          
         })
       
     socket.on('disconnect', function () {
