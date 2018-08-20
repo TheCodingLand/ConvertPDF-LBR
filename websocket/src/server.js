@@ -38,7 +38,7 @@ io.on('connection', function (socket) {
     
     //socket.send('message', { test: 'be received by client' });
 
-    socket.on('getstats', function (from, msg) {
+    socket.on('getstats', function (msg,from) {
       console.log("recieved getstats")
       
         redisclient.keys('*', (err,keys) => {
@@ -54,16 +54,17 @@ io.on('connection', function (socket) {
         console.log("recieved filestatus")
         
           
-          console.log('answering to ', msg)
-          console.log(msg)
-          let redis_sub = redis.createClient(host)
-          redis_sub.psubscribe(`conversion.${msg}`)
-          redis_sub.on("pmessage", function() {  redisclient.hgetall(message, function(err,result) {
-            console.log(result)
-            socket.emit( 'message' , JSON.stringify(result) )
-          }) //stored key is the same name as the channel
-          
-          
+        console.log('answering to ', msg)
+        console.log(msg)
+        let redis_sub = redis.createClient(host)
+        redis_sub.psubscribe(`conversion.${msg}`)
+        redis_sub.on("pmessage", function(channel, message) { 
+          redisclient.hgetall(message, function(err,result) {
+          console.log(result)
+          socket.emit( 'message' , JSON.stringify(result) )
+        }) //stored key is the same name as the channel
+        
+        
         })
           
         
