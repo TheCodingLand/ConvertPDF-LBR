@@ -106,8 +106,8 @@ class Upload extends Component {
         if (o.name === this.state.filename){
             if (o.links) {
                 
-                //var newString = mystring.replace(/i/g, "a")
-                let links = o.links.replace(/'/g, "\"")
+                
+                let links = o.links.replace(/'/g, "\'")
                 console.log('links :',links)
                 o.links = JSON.parse(links)
 
