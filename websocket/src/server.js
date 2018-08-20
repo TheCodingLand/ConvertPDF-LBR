@@ -14,7 +14,7 @@ redisclient.select(5);
 
 
 
-console.log("v0.03")
+console.log("v0.05")
 
 
 

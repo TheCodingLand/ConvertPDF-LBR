@@ -24,18 +24,20 @@ constructor() {
     }
     
     let socket = io.connect(SOCKET_URL)
+    
     this.state = {
       socket: socket,
       connected:false,
       host:this.gethost(),
-      stats: 0
+      stats: 0,
+      sendObj: this.sendObj
     }
 
   
     this.state.socket.on('connect', this.setConnected)  
     this.state.socket.on('disconnect',this.setDisconnected)  
     this.state.socket.on('getstats', this.gotStats)
-
+    
   }
   
  
@@ -52,7 +54,11 @@ gotStats = (message) => {
     }
   }
 
+  sendObj = (channel,obj) => {
+    console.log('sending data' , channel, obj)
+    this.state.socket.emit(channel, obj)
 
+  }
 
   setConnected = () => { this.setState({connected : true})
     console.log('setting connected') 

@@ -5,6 +5,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Button from 'components/CustomButtons/Button.jsx'
+import Context from 'components/Context/Context.jsx'
 
 const styles = theme => ({
     container: {
@@ -31,8 +33,13 @@ class TextFields extends React.Component {
       address: '',
       liquidation: false,
       token: '',
-      text:''
+      text:'',
+      
     };
+    submit = (context) => { console.log(context)
+    context.sendObj('publication', this.state)
+    }
+
     handleChange = name => event => {
         this.setState({
           [name]: event.target.value,
@@ -100,7 +107,13 @@ class TextFields extends React.Component {
           }
           label="En liquidation volontaire ?"
         />
+        <Context.Consumer>{context =>
+               <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>   
+                }
+                </Context.Consumer>
+        
         </form>
+        
         )
     }
 }
