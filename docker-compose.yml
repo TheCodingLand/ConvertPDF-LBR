@@ -125,7 +125,7 @@ services:
         - "traefik.frontend.rule=Host:convert.${D_HOST}"
         - "traefik.frontend.entryPoints=http"
     expose:
-      - "8080"
+      - "80"
     networks:
       - ai-web
       
