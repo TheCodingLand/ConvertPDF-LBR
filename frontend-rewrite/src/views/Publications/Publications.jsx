@@ -146,9 +146,9 @@ class TextFields extends React.Component {
         />
         <Context.Consumer>{context =>
         <div>
-               <Button onClick={()=>this.submit(context)}>Génerer PDF</Button>
+               <Button color='primary' onClick={()=>this.submit(context)}>Génerer PDF</Button>
                {context.loading === true ? <CircularProgress className={classes.progress}/> : "" }
-                {context.publink ? <Button onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank") }}>Voir Resultat</Button> :"" }
+                {context.publink ? <Button color='rose' onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank") }}>Voir Resultat</Button> :"" }
               </div>  
               }
                 
