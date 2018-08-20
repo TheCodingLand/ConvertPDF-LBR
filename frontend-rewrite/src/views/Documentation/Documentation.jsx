@@ -33,13 +33,7 @@ import Context from 'components/Context/Context.jsx'
 import dashboardStyle from "assets/jss/ctg-ai-lab/views/dashboardStyle.jsx";
 
 class Dashboard extends React.Component {
-    constructor(){
-      super()
-      this.state = {
-        
-      }
   
-    }
     
     render() {
 
@@ -93,10 +87,8 @@ return (
                 <ListItem>Travail réalisé sur mon temps libre, n'ayant donc aucun lien direct avec le LBR.
                 </ListItem>
                 <ListItem>Un petit package foncitonnant localement sous windows est en préparation.
-                </ListItem>
-                
-              </CardBody>
-          
+                </ListItem>               
+              </CardBody>         
             </Card>
  
           </GridItem>
@@ -117,8 +109,7 @@ return (
               </CardBody>
               </Card>
               </GridItem>
-        
-          
+            
               <GridItem xs={12} sm={12} md={6} style={{flexGrow: 1,}}>
             <Card style={{  display: 'flex',flexDirection: 'column', flex:1, minHeight:"91%"}}>
               <CardHeader color="success" stats icon>
@@ -137,8 +128,6 @@ return (
               </CardBody>
               </Card>
               </GridItem>
-
-     
           </GridContainer>
 
 
