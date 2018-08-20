@@ -112,6 +112,8 @@ services:
       - pdfdata:/data
     networks:
       - ai-web
+    depends_on: 
+      - redis-pdf
     working_dir : /usr/src/app
     command: sh -c 'node ./src/index.js'
 
