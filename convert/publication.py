@@ -30,7 +30,7 @@ class BasicPubPdf(object):
 
         self.pdf.ln(8)
 
-
+        self.pdf.set_font('Calibri', 'B', 12)
         self.pdf.write(16,self.NomSociete)
         self.pdf.ln(6)
         self.pdf.write(16,self.FormeJuridique)
@@ -39,7 +39,7 @@ class BasicPubPdf(object):
         self.pdf.ln(6)
         self.pdf.write(16,self.NumeroRCS)
         self.pdf.ln(6)
-
+        self.pdf.set_font('Calibri', '', 12)
         if self.EnLiquidation:
             self.pdf.write(16,self.texteLiquidation)
 
