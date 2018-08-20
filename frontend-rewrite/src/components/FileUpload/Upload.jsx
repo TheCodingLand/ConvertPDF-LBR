@@ -108,8 +108,9 @@ class Upload extends Component {
                 
                 
                 let links = o.links.replace(/\['/g, "[\"")
-                links = links.replace(/',/g, "\",")
+               
                 links = links.replace(/\'\]/g, '"]')
+                links = links.replace(/', '/g, "\", \"")
                 
                 console.log('links :',links)
                 o.links = JSON.parse(links)
