@@ -40,6 +40,7 @@ function Footer({ ...props }) {
             
             
           </List>
+          
         </div>
         <p className={classes.right}>
           <span>

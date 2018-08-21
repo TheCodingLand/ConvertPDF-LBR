@@ -2,29 +2,6 @@ version: '3'
 
 services:
   
-  
-  
-  # traefik:
-  #   image: traefik:1.5
-  #   command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker
-  #   restart: always
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #     - 10002:8080
-  #     - 10001:8082
-  #     - 10000:8081
-  #   labels:
-  #     - "traefik.frontend.rule=Host:docker.lbr.lu"
-  #     - "traefik.frontend.entryPoints=http-admin"
-  #   networks:
-  #     - ai-web
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - /opt/traefik/traefik.toml:/etc/traefik/traefik.toml
-  #     - /opt/traefik/acme.json:/etc/traefik/acme.json
-
-
   redis-pdf:
 
     restart: always

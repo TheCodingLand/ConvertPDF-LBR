@@ -12,28 +12,7 @@ redisclient.select(5);
 
 
 
-
-
 console.log("v0.05")
-
-
-
-/* 
-redis_sub.psubscribe('conversion.*')
-
-
-
-redis_sub.on("pmessage", function (channel, message) {
-  console.log("pdf :" + channel)
-  console.log(message)
-  let err =""
-  let keyvalue = ""
-  
-  redisclient.hgetall(message, function(err,result) {
-    console.log(result)
-    io.emit( 'message' , JSON.stringify(result) )
-  }) 
-}) */
 
 
 

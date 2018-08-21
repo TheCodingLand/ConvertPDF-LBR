@@ -51,7 +51,7 @@ const styles = theme => ({
   
 
 
-class TextFields extends React.Component {
+class Publications extends React.Component {
     state = {
       name: '',
       rcs: '',
@@ -173,8 +173,8 @@ class TextFields extends React.Component {
     }
 }
 
-TextFields.propTypes = {
+Publications.propTypes = {
     classes: PropTypes.object.isRequired,
   };
   
-  export default withStyles(styles)(TextFields);
+  export default withStyles(styles)(Publications);

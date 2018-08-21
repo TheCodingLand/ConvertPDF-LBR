@@ -160,6 +160,7 @@ class Upload extends Component {
         }
             return (
               <section>
+                  
                   <Typography>Veuillez SVP lire les avertissements dans la partie Documentation. Soyez patient, la conversion peut prendre du temps pour les gros fichiers.</Typography>
                   <br/>
                 
@@ -194,6 +195,7 @@ class Upload extends Component {
                       </Grid> :<div> </div>
                     }
                   </Grid>
+                 
                 </aside>
                 
               </section>

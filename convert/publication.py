@@ -23,12 +23,8 @@ class BasicPubPdf(object):
         self.text=text
     def generateBody(self):
 
-        self.text = self.text.replace('\t',' ')
-
-
-
+        self.text = self.text.replace('\t',' ').decode('UTF-8').encode('windows-1252')
         self.pdf.ln(12)
-
         self.pdf.ln(8)
 
         self.pdf.set_font('Calibri', 'B', 12)
