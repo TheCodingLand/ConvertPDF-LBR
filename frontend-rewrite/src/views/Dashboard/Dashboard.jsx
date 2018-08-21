@@ -21,7 +21,7 @@ return (<div>
           <Context.Consumer>
           {context => 
           
-          context.connected ? <UploadFile host={context.host} socket={context.socket} /> : ""
+          context.connected ? <UploadFile context={context} host={context.host} socket={context.socket} /> : ""
           }</Context.Consumer> 
            
          

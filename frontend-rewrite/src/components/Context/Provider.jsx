@@ -32,7 +32,11 @@ constructor() {
       host:this.gethost(),
       stats: 0,
       sendPub: this.sendPub,
-      publink : ''
+      publink : '',
+      filename: '',
+      setFileName : this.setFileName,
+      links : [],
+      setLinks: this.setLinks
     }
 
     this.state.socket.on('pub', this.gotPub)
@@ -41,6 +45,8 @@ constructor() {
     this.state.socket.on('getstats', this.gotStats)
     
   }
+  setLinks = (links) => this.setState({links:links})
+  setFileName = (filename) => this.setState({filename:filename})
   gotPub = (message) => {
     console.log(message)
     let o = JSON.parse(message)

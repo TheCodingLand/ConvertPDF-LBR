@@ -27,11 +27,12 @@ class Upload extends Component {
             selectedpages : [],
             filestate : {},
             links:[],
-            filename : "",
+            filename : '',
             conversion : "idle",
             message:"Cliquez sur cette zone pour charger un fichier",
             visible: 'true'
         }
+        
 
         // For a full list of possible configurations,
         // please consult http://www.dropzonejs.com/#configuration
@@ -71,6 +72,8 @@ class Upload extends Component {
         this.success = file => { console.log('uploaded', file) 
         this.setState({conversion:"started",filename:file.name, uploading:false})
         this.props.socket.emit("filestatus", file.name ) 
+        this.props.context.setFileName(file.name)
+        
 
         this.removedfile(file)   
     }
@@ -121,6 +124,7 @@ class Upload extends Component {
             }
         
         this.setState( { ...o } )
+        this.props.context.setLinks(o.links)
        
        
         if (this.state.status ==="completed") {
@@ -147,10 +151,14 @@ class Upload extends Component {
             removedfile: this.removedfile,
             sending:this.send 
         }
-
+        if (this.props.context.filename !== this.state.filename) {
+            
+            this.setState({filename:this.props.context.filename,conversion:"started", uploading:false, links:this.props.context.links, name:this.props.context.filename})
+            
+        }
             return (
               <section>
-                  <Typography>Veuillez SVP lire les avertissements dans la partie Documentation</Typography>
+                  <Typography>Veuillez SVP lire les avertissements dans la partie Documentation. Soyez patient, la conversion peut prendre du temps pour les gros fichiers.</Typography>
                   <br/>
                 
                  
