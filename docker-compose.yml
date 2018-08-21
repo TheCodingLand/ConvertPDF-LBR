@@ -10,16 +10,12 @@ services:
       - "6379"
     networks:
       - ai-web
-  
     volumes:
     - redispdf:/data
-
 
   convert:
     restart: always
     build: ./convert
-    
-    
     volumes:
      - pdfdata:/data
     environment:
