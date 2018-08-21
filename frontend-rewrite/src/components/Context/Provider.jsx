@@ -36,7 +36,9 @@ constructor() {
       filename: '',
       setFileName : this.setFileName,
       links : [],
-      setLinks: this.setLinks
+      setLinks: this.setLinks,
+      stateChange : this.stateChange,
+      conversion: 'idle'
     }
 
     this.state.socket.on('pub', this.gotPub)
@@ -45,6 +47,7 @@ constructor() {
     this.state.socket.on('getstats', this.gotStats)
     
   }
+  stateChange = (obj) => this.setState(obj)
   setLinks = (links) => this.setState({links:links})
   setFileName = (filename) => this.setState({filename:filename})
   gotPub = (message) => {

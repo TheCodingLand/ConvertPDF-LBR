@@ -71,6 +71,7 @@ class Upload extends Component {
         // Simple callbacks work too, of course
         this.success = file => { console.log('uploaded', file) 
         this.setState({conversion:"started",filename:file.name, uploading:false})
+        this.props.context.stateChange({conversion:'started'})
         this.props.socket.emit("filestatus", file.name ) 
         this.props.context.setFileName(file.name)
         
@@ -130,6 +131,7 @@ class Upload extends Component {
         if (this.state.status ==="completed") {
             //this.getOutputFile()
             this.setState({conversion:'idle',visible:'true', uploading:false})
+            this.props.context.stateChange({conversion:'idle'})
         
         }
 
@@ -153,7 +155,7 @@ class Upload extends Component {
         }
         if (this.props.context.filename !== this.state.filename) {
             
-            this.setState({filename:this.props.context.filename,conversion:"started", uploading:false, links:this.props.context.links, name:this.props.context.filename})
+            this.setState({filename:this.props.context.filename,conversion:this.props.context.conversion, uploading:false, links:this.props.context.links, name:this.props.context.filename})
             
         }
             return (
