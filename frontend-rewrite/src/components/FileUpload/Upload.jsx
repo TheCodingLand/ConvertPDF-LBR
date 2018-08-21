@@ -29,7 +29,7 @@ class Upload extends Component {
             links:[],
             filename : "",
             conversion : "idle",
-            message:"Cliquez sur la zone grise pour charger un fichier",
+            message:"Cliquez sur cette zone pour charger un fichier",
             visible: 'true'
         }
 
@@ -58,7 +58,7 @@ class Upload extends Component {
         if (this.props.host ==='localhost') {posturl= 'http://uploadpdf.'+this.props.host+'/uploadHandler'}
         this.componentConfig = {
             iconFiletypes: ['.jpg', '.pdf'],
-            showFiletypeIcon: true,
+            showFiletypeIcon: false,
             postUrl: posturl
         }
 
@@ -151,6 +151,7 @@ class Upload extends Component {
             return (
               <section>
                   <Typography>Veuillez SVP lire les avertissements dans la partie Documentation</Typography>
+                  <br/>
                 
                  
                 {this.state.conversion ==='idle' ?

@@ -6,10 +6,10 @@
 div.filepicker {
     text-align: center;
     padding: 5px;
-    background-color: #E1E1E1;
+    background-color: #fFdFdF;
     border-radius: 5px;
-    min-height: 60px;
-    border: 2px dashed #C7C7C7;
+    min-height: 100px;
+    border: 2px dashed #FF0F0F;
 }
 
 /* Icon */
@@ -34,8 +34,8 @@ div.filepicker {
     height: 34px;
 
     content: '';
-
-    border: solid 2px #7F7F7F;
+    
+    border: dashed 2px #FF0F0F;
     border-radius: 2px;
 }
 .filepicker-file-icon::after
