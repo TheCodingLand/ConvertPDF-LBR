@@ -9,6 +9,7 @@ import Button from 'components/CustomButtons/Button.jsx'
 import Context from 'components/Context/Context.jsx'
 import { Paper } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
 
 const styles = theme => ({
     container: {
@@ -33,11 +34,11 @@ const styles = theme => ({
       marginTop: theme.spacing.unit*3,
     },
     
-      progress: {
-        margin: theme.spacing.unit,
-      },
-        
-    
+    progress: {
+      marginLeft: 50,
+      margin: theme.spacing.unit,
+    },
+  
     textAreaPaper: {
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit,
@@ -155,10 +156,12 @@ class TextFields extends React.Component {
         /></Paper>
         
         <Context.Consumer>{context =>
-        <div>
-               <Button color='primary' onClick={()=>this.submit(context)}>Génerer PDF</Button>
-               {context.loading === true ? <CircularProgress className={classes.progress}/> : "" }
-                {context.publink ? <Button color='rose' onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank") }}>Voir Resultat</Button> :"" }
+        <div><Grid container>
+        <Grid item>
+               <Button color='primary' onClick={()=>this.submit(context)}>Génerer PDF</Button></Grid>
+               {context.loading === true ? <Grid item> <CircularProgress className={classes.progress}/> </Grid>: "" }
+                {context.publink ? <Grid item> <Button color='rose' onClick={()=> { window.open('http://converted.'+ context.host +'/' + context.publink, "_blank") }}>Voir Resultat</Button> </Grid> :<Grid item> </Grid> }
+                </Grid>
               </div>  
               }
                 
