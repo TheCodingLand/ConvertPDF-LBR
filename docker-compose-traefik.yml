@@ -15,7 +15,7 @@ services:
     labels:
       - "traefik.domain=${D_HOST}"
       - "traefik.frontend.rule=Host:traefik.${D_HOST}"
-      - "traefik.frontend.entryPoints=http-admin"
+      - "traefik.frontend.entryPoints=https"
     networks:
       - ai-web
     volumes:
