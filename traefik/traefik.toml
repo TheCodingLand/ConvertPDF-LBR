@@ -6,7 +6,7 @@ logLevel = "ERROR"
 
 [docker]
   endpoint = "unix:///var/run/docker.sock"
-  domain = "docker.rcsl.lu"
+  domain = "pdfexp"
   watch = true
   exposedbydefault = false
 defaultEntryPoints = [ "http", "https"]
