@@ -1,10 +1,8 @@
 version: '3'
 
 services:
-  
-  
-  
-  traefik:
+
+ traefik:
     image: traefik:1.5
     command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker
     restart: always
@@ -37,7 +35,7 @@ services:
     volumes:
     - redispdf:/data
 
-  convert:
+ convert:
     restart: always
     build: ./convert
     volumes:
@@ -50,7 +48,7 @@ services:
     networks:
       - ai-web
 
-  uploadws:
+ uploadws:
     build: ./websocket/
     environment:
      - REDIS_HOST=${REDIS_HOST}
@@ -71,7 +69,7 @@ services:
     working_dir : /usr/src/app
     command: sh -c 'node ./src/server.js'
 
-  converted:
+ converted:
     environment:
       - DESTINATION=/data
     image: python:latest
@@ -91,7 +89,7 @@ services:
     working_dir : /data/converted
     command: sh -c 'python -m http.server 8000'
 
-  uploadpdf:
+ uploadpdf:
     environment:
       - DESTINATION=/data
       - REDIS_HOST=${REDIS_HOST}
@@ -114,7 +112,7 @@ services:
     working_dir : /usr/src/app
     command: sh -c 'node ./src/index.js'
 
-  frontend:
+ frontend:
     build: ./frontend-rewrite/
     labels:
         - "traefik.backend=frontend"
