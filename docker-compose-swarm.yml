@@ -31,7 +31,7 @@ services:
     networks:
       - pdf-web
     volumes:
-    - redispdf:/data
+     - redispdf:/data
 
  convert:
     restart: always
@@ -46,7 +46,7 @@ services:
     depends_on: 
       - redis-pdf
     networks:
-      -pdf-web
+      - pdf-web
 
  uploadws:
     build: ./websocket/
@@ -119,7 +119,6 @@ services:
         - "traefik.frontend.rule=Host:pdfexp.com"
        # - "traefik.frontend.redirect.entryPoint: "https"
         - "traefik.frontend.entryPoints=http, https"
-   
     networks:
       - pdf-web
       
