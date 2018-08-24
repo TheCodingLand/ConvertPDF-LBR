@@ -136,8 +136,9 @@ services:
 
 
 networks:
-  ai-web:
-    swarm: true
+  default:
+    external:
+      name: ai-web
 
 volumes:
   
