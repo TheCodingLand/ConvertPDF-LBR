@@ -41,7 +41,7 @@ services:
     volumes:
      - pdfdata:/data
     environment:
-     - /data/=/data/
+     - PDFPATHORIGIN=/data/
      - REDIS_HOST=redis-pdf
     depends_on: 
       - redis-pdf
