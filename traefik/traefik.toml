@@ -9,16 +9,16 @@ logLevel = "ERROR"
   domain = "docker.rcsl.lu"
   watch = true
   exposedbydefault = false
-defaultEntryPoints = [ "https"]
+defaultEntryPoints = [ "http", "https"]
 
 # Entrypoints, http and https
 [entryPoints]
 
 # http should not be redirected to https
 [entryPoints.http]
-  address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
+address = ":80"
+  [entryPoints.http.redirect]
+  entryPoint = "https"
 # https is the default
 [entryPoints.https]
   address = ":443"
