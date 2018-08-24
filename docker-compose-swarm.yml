@@ -126,9 +126,8 @@ services:
 
 
 networks:
-  default:
-    external:
-      name: pdf-web
+  external:
+    name: pdf-web
   
 volumes:
   
