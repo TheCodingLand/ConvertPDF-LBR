@@ -38,6 +38,7 @@ services:
  convert:
     restart: always
     build: ./convert
+    scale: ${CONVERT_SCALE}
     volumes:
      - pdfdata:/data
     environment:
