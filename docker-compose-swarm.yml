@@ -78,8 +78,7 @@ services:
         - "traefik.frontend.rule=Host:converted.pdfexp.com"
        # - "traefik.frontend.entryPoints=https"
         - "traefik.frontend.entryPoints=http, https"
-    expose:
-      - "8000"
+
     volumes:
       - pdfdata:/data
     networks:
@@ -100,8 +99,7 @@ services:
         - "traefik.frontend.rule=Host:uploadpdf.pdfexp.com"
       #  - "traefik.frontend.redirect.entryPoint: "http,https"
         - "traefik.frontend.entryPoints=http, https"
-    expose:
-      - "8080"
+ 
     volumes:
       - pdfdata:/data
     networks:
@@ -121,9 +119,7 @@ services:
         - "traefik.frontend.rule=Host:pdfexp.com"
        # - "traefik.frontend.redirect.entryPoint: "https"
         - "traefik.frontend.entryPoints=http, https"
-        
-    expose:
-      - "80"
+   
     networks:
       - pdf-web
       
