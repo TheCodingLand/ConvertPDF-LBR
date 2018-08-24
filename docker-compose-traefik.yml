@@ -58,7 +58,7 @@ services:
         - "traefik.enable=true"
         - "traefik.port=3001"
         - "traefik.frontend.rule=Host:uploadws.${D_HOST}"
-        #- "traefik.frontend.entryPoints=https"
+        - "traefik.frontend.entryPoints=http, https"
     expose:
       - "3001"
     
@@ -80,6 +80,7 @@ services:
         - "traefik.port=8000"
         - "traefik.frontend.rule=Host:converted.${D_HOST}"
        # - "traefik.frontend.entryPoints=https"
+        - "traefik.frontend.entryPoints=http, https"
     expose:
       - "8000"
     volumes:
@@ -100,8 +101,8 @@ services:
         - "traefik.enable=true"
         - "traefik.port=8080"
         - "traefik.frontend.rule=Host:uploadpdf.${D_HOST}"
-       # - "traefik.frontend.redirect.entryPoint: "https"
-      #  - "traefik.frontend.entryPoints=https"
+      #  - "traefik.frontend.redirect.entryPoint: "http,https"
+        - "traefik.frontend.entryPoints=http, https"
     expose:
       - "8080"
     volumes:
@@ -122,7 +123,7 @@ services:
         - "traefik.port=80"
         - "traefik.frontend.rule=Host:${D_HOST}"
        # - "traefik.frontend.redirect.entryPoint: "https"
-       # - "traefik.frontend.entryPoints=https"
+        - "traefik.frontend.entryPoints=http, https"
         
     expose:
       - "80"
