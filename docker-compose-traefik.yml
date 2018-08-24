@@ -26,7 +26,7 @@ services:
       - /opt/traefik/acme.json:/etc/traefik/acme.json
 
 
-  redis-pdf:
+ redis-pdf:
 
     restart: always
     image: redis:latest
@@ -34,16 +34,12 @@ services:
       - "6379"
     networks:
       - ai-web
-  
     volumes:
     - redispdf:/data
-
 
   convert:
     restart: always
     build: ./convert
-    
-    
     volumes:
      - pdfdata:/data
     environment:
@@ -98,6 +94,7 @@ services:
   uploadpdf:
     environment:
       - DESTINATION=/data
+      - REDIS_HOST=${REDIS_HOST}
     build: ./upload/
     labels:
         - "traefik.backend=uploadpdf"
@@ -112,20 +109,22 @@ services:
       - pdfdata:/data
     networks:
       - ai-web
+    depends_on: 
+      - redis-pdf
     working_dir : /usr/src/app
     command: sh -c 'node ./src/index.js'
 
   frontend:
-    build: ./frontend/
+    build: ./frontend-rewrite/
     labels:
         - "traefik.backend=frontend"
         - "traefik.docker.network=ai-web"
         - "traefik.enable=true"
-        - "traefik.port=8080"
-        - "traefik.frontend.rule=Host:convertpdf.${D_HOST}"
+        - "traefik.port=80"
+        - "traefik.frontend.rule=Host:convert.${D_HOST}"
         - "traefik.frontend.entryPoints=http"
     expose:
-      - "8080"
+      - "80"
     networks:
       - ai-web
       
