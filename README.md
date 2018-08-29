@@ -15,12 +15,13 @@ This is still a fully operational infrastructure.
 
 ## Infrastructure is based on docker-compose :
 
-- Frontend (web page in ReactJS)
-- Websocket (sends updates from redis to the webpage)
-- redis message queue : holds pending jobs, and events messages for UI
-- Upload Server : simple multer implementation for the file upload
-- Converted server : provides https access to the user's converted file
-- Workers : several PDF conversion servers (scaled to 10 instances by default, configure in .env file)
+- Frontend (web page in ReactJS) (/frontend-rewrite)
+- Websocket (sends updates from redis to the webpage) (/websocket)
+- redis message queue : holds pending jobs, and events messages for UI (redis docker image)
+- Upload Server : simple multer implementation for the file upload (/upload)
+- Converted server : provides https access to the user's converted file (nginx server, /converted)
+- Workers : several PDF conversion servers, scaled to 10 instances by default, configure in .env file. (/convert)
+- Traefik Reverse proxy : configs in /traefik
 
 ## Prerequisites :
  - have a docker installation with docker-compose : https://docs.docker.com/
