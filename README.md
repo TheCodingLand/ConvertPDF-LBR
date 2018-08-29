@@ -10,7 +10,7 @@ Most people encounter compression filters issues when interracting with this pla
 This attempts to fix that by rasterizing documents, and applying transformations based on locad adaptive thresolding.
 it also ensures a4 size and format.
 
-Infrastructure is based on docker-compose :
+## Infrastructure is based on docker-compose :
 
 - Frontend (web page in ReactJS)
 - Websocket (sends updates from redis to the webpage)
@@ -19,13 +19,13 @@ Infrastructure is based on docker-compose :
 - Converted server : provides https access to the user's converted file
 - Workers : several PDF conversion servers (scaled to 10 instances by default, configure in .env file)
 
-Prerequisites :
+## Prerequisites :
  - have a docker installation with docker-compose : https://docs.docker.com/
  - you need a dns zone that points to your machine hostname like : *.hostname.company.com
  - for https, you need to temporarly allow external access to http to get the letsencrypt certificates
  - for internal http access only, you just need to change the traefik/traefik.yml config file to not redirect to https (see the file itself)
  
-then : 
+## Installation :
 - git clone https://github.com/TheCodingLand/ConvertPDF-LBR .
 - edit the .env file, replace the D_HOST environment variable with hostname.company.com
 - edit traefik/traefik.yaml to disable https redirection if needed
@@ -33,15 +33,13 @@ then :
 
 You can now access the web UI at hostname.company.com
 
-
-
-WINDOWS BUILD :
+## WINDOWS BUILD :
 
 I have successfully build the conversion tool into a windows package. however it still needs a lot of work.
 
 
 
-Note : 
+## Note on docker swarm and Kubernetes : 
 There are a couple config files for Kubernetes. 
 I was able to host this on GKE aka Google Cloud Kubernetes Engine.
 I would have to review those configuration files, as well as the docker-compose-swarm file.
