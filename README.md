@@ -12,12 +12,12 @@ it also ensures a4 size and format.
 
 Infrastructure is based on docker-compose :
 
--Frontend (web page in ReactJS)
--Websocket (sends updates from redis to the webpage)
--redis message queue : holds pending jobs, and events messages for UI
--Upload Server : simple multer implementation for the file upload
--Converted server : provides https access to the user's converted file
--Workers : several PDF conversion servers (scaled to 10 instances by default)
+- Frontend (web page in ReactJS)
+- Websocket (sends updates from redis to the webpage)
+- redis message queue : holds pending jobs, and events messages for UI
+- Upload Server : simple multer implementation for the file upload
+- Converted server : provides https access to the user's converted file
+- Workers : several PDF conversion servers (scaled to 10 instances by default)
 
 Prerequisites :
  - have a docker installation with docker-compose : https://docs.docker.com/
