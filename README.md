@@ -7,7 +7,7 @@ It's goal is to provide PDF files compatible with the Register of Commerce (AKA 
 It can generate any file needed for filing operations on this platform.
 
 Most people encounter compression filters issues when interracting with this platform, resulting in errors "not adjustable", or "non ajustable"
-This attempts to fix that by rasterizing documents, and applying transformations based on locad adaptive thresolding.
+This attempts to fix that by rasterizing documents, and applying transformations based on a neural network trained local adaptive thresolding technique.
 it also ensures a4 size and format.
 
 ## Infrastructure is based on docker-compose :
