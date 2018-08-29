@@ -10,8 +10,8 @@ Most people encounter compression filters issues when interracting with this pla
 This attempts to fix that by rasterizing documents, and applying transformations based on a neural network trained local adaptive thresolding technique.
 It also ensures A4 size and format.
 The neural network used is not included in this package as I intend to use it in a proprietary project.
-The conversion algorithm is in the /Convert package.
-This is the fully operational infrastructure.
+
+This is still a fully operational infrastructure.
 
 ## Infrastructure is based on docker-compose :
 
