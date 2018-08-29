@@ -8,7 +8,10 @@ It can generate any file needed for filing operations on this platform.
 
 Most people encounter compression filters issues when interracting with this platform, resulting in errors "not adjustable", or "non ajustable"
 This attempts to fix that by rasterizing documents, and applying transformations based on a neural network trained local adaptive thresolding technique.
-it also ensures a4 size and format.
+It also ensures A4 size and format.
+The neural network used is not included in this package as I intend to use it in a proprietary project.
+The conversion algorithm is in the /Convert package.
+This is the fully operational infrastructure.
 
 ## Infrastructure is based on docker-compose :
 
