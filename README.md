@@ -17,7 +17,7 @@ Infrastructure is based on docker-compose :
 - redis message queue : holds pending jobs, and events messages for UI
 - Upload Server : simple multer implementation for the file upload
 - Converted server : provides https access to the user's converted file
-- Workers : several PDF conversion servers (scaled to 10 instances by default)
+- Workers : several PDF conversion servers (scaled to 10 instances by default, configure in .env file)
 
 Prerequisites :
  - have a docker installation with docker-compose : https://docs.docker.com/
