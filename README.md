@@ -41,3 +41,9 @@ I have successfully build the conversion tool into a windows package. however it
 
 
 
+Note : 
+There are a couple config files for Kubernetes. 
+I was able to host this on GKE aka Google Cloud Kubernetes Engine.
+I would have to review those configuration files, as well as the docker-compose-swarm file.
+Please do not use those for now. 
+Thanks.
