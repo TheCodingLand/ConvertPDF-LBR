@@ -36,7 +36,7 @@ You can now access the web UI at hostname.company.com
 ## WINDOWS BUILD :
 
 I have successfully build the conversion tool into a windows package. however it still needs a lot of work.
-
+See inside the /convert folder if interested.
 
 
 ## Note on docker swarm and Kubernetes : 
