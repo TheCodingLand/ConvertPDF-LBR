@@ -3,7 +3,7 @@
 DEMO : https://pdfexp.com
 
 This is a PDF conversion platform. 
-It's goal is to provide PDF files comatible with the Register of Commerce (AKA Luxembourg Business Register) 's PDF formats.
+It's goal is to provide PDF files compatible with the Register of Commerce (AKA Luxembourg Business Register) 's PDF formats.
 It can generate any file needed for filing operations on this platform.
 
 Most people encounter compression filters issues when interracting with this platform, resulting in errors "not adjustable", or "non ajustable"
