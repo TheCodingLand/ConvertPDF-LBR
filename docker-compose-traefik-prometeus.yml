@@ -1,0 +1,219 @@
+
+
+version: '3'
+
+services:
+
+ traefik:
+    image: traefik:1.5
+    command: --web --web.metrics.prometheus --web.metrics.prometheus.buckets="0.1,0.3,1.2,5.0" --docker
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 10002:8080
+      - 10001:8082
+      - 10000:8081
+    labels:
+      - "traefik.domain=${D_HOST}"
+      - "traefik.frontend.rule=Host:traefik.${D_HOST}"
+      - "traefik.frontend.entryPoints=http, https"
+    networks:
+      - ai-web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./traefik/acme.json:/etc/traefik/acme.json
+
+
+ redis-pdf:
+
+    restart: always
+    image: redis:latest
+    expose:
+      - "6379"
+    networks:
+      - ai-web
+    volumes:
+    - redispdf:/data
+
+ convert:
+    restart: always
+    build: ./convert
+    deploy:
+      replicas: ${CONVERT_SCALE}
+    volumes:
+     - pdfdata:/data
+    environment:
+     - PDFPATHORIGIN=${PDFPATHORIGIN}
+     - REDIS_HOST=${REDIS_HOST}
+    depends_on: 
+      - redis-pdf
+    networks:
+      - ai-web
+
+ uploadws:
+    build: ./websocket/
+    environment:
+     - REDIS_HOST=${REDIS_HOST}
+    labels:
+        - "traefik.backend=uploadws"
+        - "traefik.docker.network=ai-web"
+        - "traefik.enable=true"
+        - "traefik.port=3001"
+        - "traefik.frontend.rule=Host:uploadws.${D_HOST}"
+        - "traefik.frontend.entryPoints=http, https"
+    expose:
+      - "3001"
+    
+    networks:
+      - ai-web
+    depends_on: 
+      - redis-pdf
+    working_dir : /usr/src/app
+    command: sh -c 'node ./src/server.js'
+
+ converted:
+    environment:
+      - DESTINATION=/data
+    image: python:latest
+    labels:
+        - "traefik.backend=converted"
+        - "traefik.docker.network=ai-web"
+        - "traefik.enable=true"
+        - "traefik.port=8000"
+        - "traefik.frontend.rule=Host:converted.${D_HOST}"
+       # - "traefik.frontend.entryPoints=https"
+        - "traefik.frontend.entryPoints=http, https"
+    expose:
+      - "8000"
+    volumes:
+      - pdfdata:/data
+    networks:
+      - ai-web
+    working_dir : /data/converted
+    command: sh -c 'python -m http.server 8000'
+
+ uploadpdf:
+    environment:
+      - DESTINATION=/data
+      - REDIS_HOST=${REDIS_HOST}
+    build: ./upload/
+    labels:
+        - "traefik.backend=uploadpdf"
+        - "traefik.docker.network=ai-web"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+        - "traefik.frontend.rule=Host:uploadpdf.${D_HOST}"
+      #  - "traefik.frontend.redirect.entryPoint: "http,https"
+        - "traefik.frontend.entryPoints=http, https"
+    expose:
+      - "8080"
+    volumes:
+      - pdfdata:/data
+    networks:
+      - ai-web
+    depends_on: 
+      - redis-pdf
+    working_dir : /usr/src/app
+    command: sh -c 'node ./src/index.js'
+
+ frontend:
+    build: ./frontend-rewrite/
+    labels:
+        - "traefik.backend=frontend"
+        - "traefik.docker.network=ai-web"
+        - "traefik.enable=true"
+        - "traefik.port=80"
+        - "traefik.frontend.rule=Host:${D_HOST}"
+       # - "traefik.frontend.redirect.entryPoint: "https"
+        - "traefik.frontend.entryPoints=http, https"
+        
+    expose:
+      - "80"
+    networks:
+      - ai-web
+      
+   
+
+
+ prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention=200h'
+      - '--web.enable-lifecycle'
+    # restart: unless-stopped
+
+    ports:
+      - "9090:9090"
+    networks:
+      - ai-web
+  
+ nodeexporter:
+    image: prom/node-exporter:latest
+    container_name: nodeexporter
+    user: root
+    privileged: true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+ 
+    networks:
+      - ai-web
+
+ grafana:
+   image: grafana/grafana:latest
+   container_name: grafana
+   volumes:
+     - grafana_data:/var/lib/grafana
+     - ./grafana/datasources:/etc/grafana/datasources
+     - ./grafana/dashboards:/etc/grafana/dashboards
+     - ./grafana/setup.sh:/setup.sh
+   entrypoint: /setup.sh
+   environment:
+     - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+     - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+     - GF_USERS_ALLOW_SIGN_UP=false
+  
+
+   labels:
+        - "traefik.backend=grafana"
+        - "traefik.docker.network=ai-web"
+        - "traefik.enable=true"
+        - "traefik.port=3000"
+        - "traefik.frontend.rule=Host:monitoring.${D_HOST}"
+      #  - "traefik.frontend.redirect.entryPoint: "http,https"
+        - "traefik.frontend.entryPoints=http, https"
+   restart: unless-stopped
+
+   networks:
+     - ai-web
+
+   
+
+networks:
+  ai-web:
+    external: true
+
+    
+volumes:
+  
+  prometheus_data: {}
+  grafana_data: {}
+  pdfdata: {}
+  redispdf: {}
+  
